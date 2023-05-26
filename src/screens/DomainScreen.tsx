@@ -97,7 +97,7 @@ export const DomainScreen = ({ navigation, route }: Props) => {
                         }
                     ]}
                 >
-                    <IconButton icon='code-json' size={40} style={{ alignSelf: 'center' }} />
+                    <IconButton accessible={false} icon='code-json' size={40} style={{ alignSelf: 'center' }} />
                     <Text style={{ marginVertical: 5, textAlign: 'center', fontWeight: 'bold' }} variant='titleLarge'>¡Bienvenido!</Text>
                     <Text style={{ marginVertical: 5, textAlign: 'center', marginHorizontal: 10, color: colors.outline }}>Para empezar a utilizar esta aplicación, proporcione la dirección del servidor de su central de alarmas</Text>
                     <Input

@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useContext, useEffect, useLayoutEffect, useState, useRef, createRef } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useState, useRef } from 'react';
 import { Image, KeyboardAvoidingView, Platform, View, TouchableWithoutFeedback, Keyboard, ScrollView, Alert, TextInput as NativeTextInput } from 'react-native';
 import { RootStackParamList, Saved, Service } from '../types/types';
 
@@ -29,14 +29,12 @@ type InputsLogIn = {
 }
 
 export const LogInScreen = ({ navigation, route }: Props) => {
-    const { control, handleSubmit, reset, setValue, getValues, register } = useForm<InputsLogIn>({ defaultValues: { email: '', password: '' } });
+    const { control, handleSubmit, reset, setValue, getValues } = useForm<InputsLogIn>({ defaultValues: { email: '', password: '' } });
     const [isShow, setIsShow] = useState<boolean>(true);
     const [getted, setGetted] = useState<InputsLogIn>();
     const [isChanged, setIsChanged] = useState<boolean>(false);
     const { LogIn } = useContext(RequestContext);
     const { handleError, notification } = useContext(NotificationContext);
-
-    const nextInput = useRef<NativeTextInput>(null);
 
     const {
         theme: { theme: { colors, dark } },
@@ -48,9 +46,8 @@ export const LogInScreen = ({ navigation, route }: Props) => {
     const { isLoading, mutate } = useMutation(['LogIn'], LogIn, {
         retry: 0,
         onError: async err => {
-            const Error: AxiosError = err as AxiosError;
-            const Response: AxiosResponse = Error.response as AxiosResponse;
-            handleError(String(Response.data.message));
+            const Err = err as AxiosError;
+            handleError(Err.message);
         },
         onSuccess: async data => {
             if (isCompatible) {
@@ -302,7 +299,7 @@ export const LogInScreen = ({ navigation, route }: Props) => {
                                     }
                                 />
 
-                                <TouchableRipple style={{ marginVertical: 10 }} rippleColor={colors.secondaryContainer} onPress={() => { }} >
+                                <TouchableRipple style={{ marginVertical: 10 }} rippleColor={colors.secondaryContainer} onPress={() => (saved === null) ? check() : deleteCheck()} >
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <Checkbox
                                             status={(saved !== null) ? 'checked' : 'unchecked'}

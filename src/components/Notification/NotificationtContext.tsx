@@ -44,7 +44,7 @@ interface Props {
 const initialState: State = {
     show: false,
     autoClose: true,
-    timeOut: 3000,
+    timeOut: 2000,
 }
 
 
@@ -62,7 +62,7 @@ export const NotificationProvider = ({ children }: any) => {
         });
     }
 
-    const resetTimeOut = () => dispatch({ type: 'updateTimeOut', payload: 3000 });
+    const resetTimeOut = () => dispatch({ type: 'updateTimeOut', payload: 2000 });
 
     const notification = (props: Props) => {
         dispatch({ type: 'show', payload: props });

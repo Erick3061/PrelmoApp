@@ -60,7 +60,6 @@ export const RequestProvider = ({ children }: any) => {
                 const refreshToken = await EncryptedStorage.getItem(Service["Encrypted-RefreshToken"]) ?? 'without token';
                 const user = await CheckAuth(refreshToken);
                 AppDispatch(setUser(user));
-                console.log('update user interceptor response');
             } catch (error) {
                 return Promise.reject(error);
             }

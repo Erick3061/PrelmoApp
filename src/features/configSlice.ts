@@ -44,13 +44,11 @@ export const updateDomain = createAsyncThunk('updateDomain', async (domain: stri
     });
 
     instance.interceptors.request.use(async (config) => {
-        console.log('entra intercept req');
         const token = await EncryptedStorage.getItem(Service["Encrypted-Token"]);
         config.headers.Authorization = `Bearer ${token}`;
         return config;
     },
         (error) => {
-            console.log("-->" + error);
             return Promise.reject(error)
         },
     );
@@ -62,8 +60,6 @@ export const setUser = createAsyncThunk('LogIn', async (User: User) => {
     try {
         await EncryptedStorage.setItem(Service["Encrypted-Token"], User.token);
         await EncryptedStorage.setItem(Service["Encrypted-RefreshToken"], User.refreshToken);
-        console.log(User.refreshToken);
-
         return User;
     } catch (error) {
         await EncryptedStorage.removeItem(Service["Encrypted-Token"]);

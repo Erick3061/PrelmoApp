@@ -148,7 +148,7 @@ export const Stack = () => {
                             }
                             <RootStack.Group key={"AllState"}>
                                 <RootStack.Screen name='DownloadScreen' component={DownloadScreen} />
-                                <RootStack.Screen name="DomainScreen" component={DomainScreen} options={{ orientation: 'portrait' }} />
+                                <RootStack.Screen name="DomainScreen" component={DomainScreen} />
                                 <RootStack.Screen name='PdfScreen' component={PdfScreen} />
                             </RootStack.Group>
 
