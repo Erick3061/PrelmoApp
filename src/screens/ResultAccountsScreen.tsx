@@ -387,17 +387,17 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: .2, borderColor: Color(colors.primary).alpha(.2).toString() }}>
                                 {
-                                    (item.eventos && item.eventos[0])
+                                    (item.evento)
                                         ?
                                         <>
                                             <Text style={[
                                                 fonts.titleSmall,
-                                                { flex: 1, color: item.eventos[0].DescripcionAlarm.toLowerCase().includes('apert') ? colors.success : colors.danger }
+                                                { flex: 1, color: item.evento.DescripcionAlarm.toLowerCase().includes('apert') ? colors.success : colors.danger }
                                             ]}>Estado</Text>
                                             <Text style={[
                                                 fonts.titleSmall,
-                                                { flex: 1, textAlign: 'right', color: item.eventos[0].DescripcionAlarm.toLowerCase().includes('apert') ? colors.success : colors.danger }
-                                            ]}>{item.eventos[0].DescripcionAlarm}</Text>
+                                                { flex: 1, textAlign: 'right', color: item.evento.DescripcionAlarm.toLowerCase().includes('apert') ? colors.success : colors.danger }
+                                            ]}>{item.evento.DescripcionAlarm}</Text>
                                         </>
                                         :
                                         <>
@@ -406,19 +406,6 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
                                         </>
                                 }
                             </View>
-                            {/* <View key={index + 'button'} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: .2, borderColor: Color(colors.primary).alpha(.2).toString() }}>
-                                <Text style={[fonts.titleSmall, { flex: 1 }]}>{ }</Text>
-                                <Button
-                                    contentStyle={{ marginVertical: 4 }}
-                                    labelStyle={[fonts.bodySmall, { textTransform: 'capitalize', fontWeight: 'bold' }]}
-                                    mode='contained-tonal'
-                                    text='Detalles'
-                                    colorPressed={Color(colors.primary).fade(.8).toString()}
-                                    onPress={() => {
-                                        navigation.navigate('ResultAccountScreen', { account: item, start: dates.start.date.date, end: dates.end.date.date, filter: false, keys: getKeys('event-alarm'), typeAccount: 1, report: 'event-alarm' })
-                                    }}
-                                />
-                            </View> */}
                         </>
                 }
             </View>
@@ -439,13 +426,13 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
                     data = data.filter(acc => acc.estado === BatteryStatus.WITHOUT_EVENTS)
                     break;
                 case 'A':
-                    data = data.filter(acc => acc.eventos && acc.eventos.find(f => AP.find(ff => ff === f.CodigoAlarma)))
+                    data = data.filter(acc => acc.evento && AP.find(ff => ff === acc.evento?.CodigoAlarma))
                     break;
                 case 'C':
-                    data = data.filter(acc => acc.eventos && acc.eventos.find(f => CI.find(ff => ff === f.CodigoAlarma)))
+                    data = data.filter(acc => acc.evento && CI.find(ff => ff === acc.evento?.CodigoAlarma))
                     break;
                 case 'S':
-                    data = data.filter(acc => !acc.eventos)
+                    data = data.filter(acc => !acc.evento)
                     break;
             }
         }

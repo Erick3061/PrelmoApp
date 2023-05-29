@@ -244,9 +244,9 @@ export const RequestProvider = ({ children }: any) => {
         } else if (type === 'state') {
             if (data && data.cuentas) {
                 let abiertas: number = 0, cerradas: number = 0, sinEstado: number = 0;
-                abiertas = data.cuentas.filter(f => (f.eventos && f.eventos.find(f => AP.find(ff => ff === f.CodigoAlarma)))).length;
-                cerradas = data.cuentas.filter(f => (f.eventos && f.eventos.find(f => CI.find(ff => ff === f.CodigoAlarma)))).length;
-                sinEstado = data.cuentas.filter(f => !f.eventos).length;
+                abiertas = data.cuentas.filter(f => (AP.find(ff => ff === f.evento?.CodigoAlarma))).length;
+                cerradas = data.cuentas.filter(f => (CI.find(ff => ff === f.evento?.CodigoAlarma))).length;
+                sinEstado = data.cuentas.filter(f => !f.evento).length;
                 const percentajes: Percentajes = {
                     abiertas: {
                         percentaje: (abiertas * 100) / data.cuentas.length,

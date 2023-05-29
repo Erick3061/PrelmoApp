@@ -72,6 +72,7 @@ export interface Account {
     numeroEventos?: number;
     estado?: BatteryStatus;
     eventos?: Array<Events>;
+    evento?: Events;
 }
 
 export interface Group {
