@@ -56,7 +56,7 @@ export const ResultAccountScreen = ({ navigation, route: { params: { account, en
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            title: isDownloadDoc ? 'Descargando documento...' : (report === 'ap-ci') ? 'Apertura y cierre' : 'Evento de alarma',
+            title: isDownloadDoc ? 'Descargando documento...' : `${orientation === Orientation.landscape ? `${account.Nombre}  ` : ''} ${(report === 'ap-ci') ? 'Apertura y cierre' : 'Evento de alrma'}`,
             headerLeft: (() =>
                 isDownloadDoc
                     ?
@@ -129,7 +129,7 @@ export const ResultAccountScreen = ({ navigation, route: { params: { account, en
                 />
             )
         });
-    }, [navigation, isLoading, isFetching, setView, view, isDownloadDoc]);
+    }, [navigation, isLoading, isFetching, setView, view, isDownloadDoc, orientation]);
 
     const renderItem = useCallback(({ index, item, separators }: ListRenderItemInfo<Events>) => (
         view === 'default'
@@ -152,7 +152,9 @@ export const ResultAccountScreen = ({ navigation, route: { params: { account, en
                 </View>
             </Animated.View>
             :
-            <DataTable.Row>
+            <DataTable.Row style={[
+                (index % 2 === 0) && { backgroundColor: Color(dark ? colors.onSurface : colors.primary).fade(.98).toString() }
+            ]}>
                 {
                     keys.map((key) =>
                         <DataTable.Cell
@@ -271,9 +273,10 @@ export const ResultAccountScreen = ({ navigation, route: { params: { account, en
                                 ]}>
                                     <ScrollView horizontal={true}>
                                         <DataTable>
-                                            <DataTable.Header>
+                                            <DataTable.Header style={{ backgroundColor: Color(colors.primary).fade(.9).toString() }}>
                                                 {
-                                                    keys.map((key) => <DataTable.Title key={key.label} style={{ width: key.size, justifyContent: 'center' }} textStyle={[fonts.labelMedium]}>{key.label}</DataTable.Title>)
+                                                    keys.map((key) => <DataTable.Title key={key.label} style={{ width: key.size, justifyContent: 'center' }}
+                                                        textStyle={[fonts.labelMedium, { fontWeight: 'bold' }]}>{key.label}</DataTable.Title>)
                                                 }
                                             </DataTable.Header>
                                             <FlatList
@@ -335,7 +338,13 @@ export const ResultAccountScreen = ({ navigation, route: { params: { account, en
 
     return (
         <>
-            <Text variant='titleSmall' style={[{ borderLeftWidth: 3, borderColor: colors.primary }]}>  Entre las fechas {start} a {end}</Text>
+            <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
+                <Text variant='titleMedium' style={[
+                    { marginBottom: 5 },
+                    orientation === Orientation.landscape && { display: 'none' }
+                ]}>{account.Nombre}</Text>
+                <Text variant='titleSmall' style={[{ borderLeftWidth: 3, borderColor: colors.primary }]}>  Entre las fechas {start} a {end}</Text>
+            </View>
             {
                 (!filter)
                     ?

@@ -181,51 +181,59 @@ export const SelectAccountScreen = ({ navigation }: Props) => {
                         <KeyboardAvoidingView>
                             {_renderSelectAccount()}
                             {_renderSelectReport()}
-                            <Pressable
-                                onPress={() => setIsSelected(!isSelected)}
-                                android_ripple={{ color: Color(colors.primary).fade(.9).toString() }}
-                            >
-                                {
-                                    ({ pressed }) => {
-                                        return (
-                                            <View style={[
-                                                {
-                                                    borderRadius: roundness,
-                                                    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-                                                    paddingVertical: 10, paddingHorizontal: 5
-                                                },
-                                                pressed && { backgroundColor: Color(colors.primary).fade(.9).toString() },
-                                            ]}>
-                                                <Text variant='labelLarge'>Filtar eventos</Text>
-                                                <Switch onChange={() => setIsSelected(!isSelected)} value={isSelected} thumbColor={colors.primary} trackColor={{ false: undefined, true: Color(colors.primary).fade(.8).toString() }} />
-                                            </View>
-                                        )
-                                    }
-                                }
-                            </Pressable>
                             <View style={[
                                 orientation === Orientation.landscape && {
                                     flexDirection: 'row',
-                                    justifyContent: 'flex-end'
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
                                 }
                             ]}>
-                                <Calendar
-                                    calendars={calendars}
-                                    backgroundColor={colors.background}
-                                    textColor={colors.text}
-                                    colorOutline={colors.primary}
-                                    limitDays={30}
-                                    onChange={setDates}
-                                    Textstyle={fonts.titleMedium}
-                                />
-                                <View style={{ padding: 10, alignItems: 'flex-end' }}>
-                                    <Button
-                                        children='CONSULTAR'
-                                        style={{ marginVertical: 5 }}
-                                        mode='contained'
-                                        onPress={handleSubmit(onSubmit)}
-                                        contentStyle={{ paddingVertical: 5 }}
+                                <Pressable
+                                    onPress={() => setIsSelected(!isSelected)}
+                                    android_ripple={{ color: Color(colors.primary).fade(.9).toString() }}
+                                >
+                                    {
+                                        ({ pressed }) => {
+                                            return (
+                                                <View style={[
+                                                    {
+                                                        borderRadius: roundness,
+                                                        flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+                                                        paddingVertical: 10, paddingHorizontal: 5
+                                                    },
+                                                    pressed && { backgroundColor: Color(colors.primary).fade(.9).toString() },
+                                                ]}>
+                                                    <Text variant='labelLarge'>Filtar eventos</Text>
+                                                    <Switch onChange={() => setIsSelected(!isSelected)} value={isSelected} thumbColor={colors.primary} trackColor={{ false: undefined, true: Color(colors.primary).fade(.8).toString() }} />
+                                                </View>
+                                            )
+                                        }
+                                    }
+                                </Pressable>
+                                <View style={[
+                                    orientation === Orientation.landscape && {
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-end'
+                                    }
+                                ]}>
+                                    <Calendar
+                                        calendars={calendars}
+                                        backgroundColor={colors.background}
+                                        textColor={colors.text}
+                                        colorOutline={colors.primary}
+                                        limitDays={30}
+                                        onChange={setDates}
+                                        Textstyle={fonts.titleMedium}
                                     />
+                                    <View style={{ padding: 10, alignItems: 'flex-end' }}>
+                                        <Button
+                                            children='CONSULTAR'
+                                            style={{ marginVertical: 5 }}
+                                            mode='contained'
+                                            onPress={handleSubmit(onSubmit)}
+                                            contentStyle={{ paddingVertical: 5 }}
+                                        />
+                                    </View>
                                 </View>
                             </View>
                         </KeyboardAvoidingView>
@@ -235,7 +243,11 @@ export const SelectAccountScreen = ({ navigation }: Props) => {
             <Portal>
                 <Dialog visible={isShow} onDismiss={() => setIsShow(false)}>
                     <Dialog.Title>Consulta individual</Dialog.Title>
-                    <Dialog.Content>
+                    <Dialog.Content style={[
+                        orientation === Orientation.landscape && {
+                            maxHeight: 150
+                        }
+                    ]}>
                         <Text variant='labelMedium'>Seleccione el inicio y fin de la consulta{'\n'}</Text>
                         <Text variant='labelMedium'>Recuerde que solo se puede consultar hasta 30 dias naturales{'\n'}</Text>
                         <Text variant='titleSmall'>APERTURA Y CIERRE</Text>

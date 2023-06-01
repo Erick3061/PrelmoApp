@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Animated, { BounceIn, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
-import { RootStackParamList } from '../types/types';
+import { Orientation, RootStackParamList } from '../types/types';
 import { useAppSelector } from '../app/hooks';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
 

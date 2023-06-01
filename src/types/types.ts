@@ -61,6 +61,7 @@ export type RootStackParamList = {
     DetailsInfoScreen: undefined;
     Drawer: undefined;
     DownloadScreen: undefined;
+    ChangePasswordScreen: undefined;
     PdfScreen: {
         name: string;
         url: string;
@@ -99,7 +100,6 @@ export type RootDrawerParamList = {
     ProfileScreen: undefined;
     DownloadScreen: undefined;
     DetailsInfoScreen: undefined;
-    ChangePasswordScreen: undefined;
     SelectAccountScreen: undefined;
     SelectGroupsScreen: undefined;
     SelectAccountsScreen: undefined;

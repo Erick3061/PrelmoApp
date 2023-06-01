@@ -178,16 +178,22 @@ export const SelectGroupsScreen = ({ navigation, route }: Props) => {
             <Portal>
                 <Dialog visible={isShow} onDismiss={() => setIsShow(false)}>
                     <Dialog.Title>Consulta por grupo</Dialog.Title>
-                    <Dialog.Content>
-                        <Text variant='titleSmall'>PROBLEMAS DE BATERIA</Text>
-                        <Text variant='labelMedium'>Rastrea los sistemas con fallos de batería.{'\n'}Este reporte consulta 30 días naturales.{'\n'}</Text>
-                        <Text variant='titleSmall'>ESTADO DE SUCURSALES</Text>
-                        <Text variant='labelMedium'>Permite consultar el estado de las sucursales al momento de realizar la petición.{'\n'}Los estados posibles son:{'\n'}{'\n'}
-                            Abierto{'\n'}
-                            Cerrado{'\n'}
-                            Sin actividad{'\n'}</Text>
-                        <Text variant='titleSmall'>HORARIO DE APERTURAS Y CIERRES</Text>
-                        <Text variant='labelMedium'>Consulta primer apertura y ultimo cierre de cada día de todas las sucursales, este reporte consulta 7 días antes de la fecha de consulta.</Text>
+                    <Dialog.Content style={[
+                        orientation === Orientation.landscape && {
+                            maxHeight: 150
+                        }
+                    ]}>
+                        <ScrollView>
+                            <Text variant='titleSmall'>PROBLEMAS DE BATERIA</Text>
+                            <Text variant='labelMedium'>Rastrea los sistemas con fallos de batería.{'\n'}Este reporte consulta 30 días naturales.{'\n'}</Text>
+                            <Text variant='titleSmall'>ESTADO DE SUCURSALES</Text>
+                            <Text variant='labelMedium'>Permite consultar el estado de las sucursales al momento de realizar la petición.{'\n'}Los estados posibles son:{'\n'}{'\n'}
+                                Abierto{'\n'}
+                                Cerrado{'\n'}
+                                Sin actividad{'\n'}</Text>
+                            <Text variant='titleSmall'>HORARIO DE APERTURAS Y CIERRES</Text>
+                            <Text variant='labelMedium'>Consulta primer apertura y ultimo cierre de cada día de todas las sucursales, este reporte consulta 7 días antes de la fecha de consulta.</Text>
+                        </ScrollView>
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={() => setIsShow(false)}>Cerrar</Button>

@@ -1,19 +1,19 @@
 import React, { useContext, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, View, TextInput as NativeTextInput, Alert } from 'react-native';
-import { NotificationContext } from '../../components/Notification/NotificationtContext';
-import { RequestContext } from '../../context/RequestContext';
-import { UpdateUserProps } from '../../interface/interface';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { NotificationContext } from '../components/Notification/NotificationtContext';
+import { RequestContext } from '../context/RequestContext';
+import { UpdateUserProps } from '../interface/interface';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { useMutation } from '@tanstack/react-query';
-import { Orientation, Service } from '../../types/types';
-import { Loading } from '../../components/Loading';
-import { Input } from '../../components/Input';
+import { Orientation, Service } from '../types/types';
+import { Loading } from '../components/Loading';
+import { Input } from '../components/Input';
 import { Button, TextInput } from 'react-native-paper';
-import { AxiosError, AxiosResponse } from 'axios';
-import { logOut, updateSaved } from '../../features/configSlice';
+import { logOut, updateSaved } from '../features/configSlice';
 import keychain from 'react-native-keychain';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import { AxiosError } from 'axios';
 
 
 type ChagePassword = {
@@ -47,11 +47,8 @@ export const ChangePasswordScreen = () => {
 
     const { isLoading, mutate } = useMutation(['updateUser'], (props: UpdateUserProps) => UpdateUser(props), {
         onError: error => {
-            if (String(error).includes('no coincide')) {
-                setError('password', { message: String(error) }, { shouldFocus: false });
-            }
-            const Error: AxiosError = error as AxiosError;
-            handleError(String(Error.message))
+            const Err = error as AxiosError;
+            handleError(Err.message);
         },
         onSuccess: (data) => {
             deleteCheck();
@@ -82,11 +79,11 @@ export const ChangePasswordScreen = () => {
             {
                 flex: 1,
                 justifyContent: 'center',
-                padding: 10
+                padding: 15
             },
             orientation === Orientation.landscape && {
                 width: '80%',
-                alignSelf: 'center'
+                alignSelf: 'center',
             }
         ]}>
             <Loading refresh={isLoading} />
@@ -112,6 +109,7 @@ export const ChangePasswordScreen = () => {
                     label='Contraseña'
                     onSubmitEditing={() => newPass.current?.focus()}
                     returnKeyType='next'
+                    autoCapitalize='none'
                 />
 
                 <Input
@@ -130,6 +128,7 @@ export const ChangePasswordScreen = () => {
                     label='Contraseña nueva'
                     onSubmitEditing={() => confPass.current?.focus()}
                     returnKeyType='next'
+                    autoCapitalize='none'
                 />
 
                 <Input
@@ -148,6 +147,7 @@ export const ChangePasswordScreen = () => {
                     label='Confirma tu contraseña'
                     onSubmitEditing={handleSubmit(onSubmit)}
                     returnKeyType='done'
+                    autoCapitalize='none'
                 />
 
                 <View style={{ alignItems: 'flex-end', paddingVertical: 15 }}>

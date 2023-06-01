@@ -286,7 +286,11 @@ export const SelectAccountsScreen = ({ navigation, route }: Props) => {
             <Portal>
                 <Dialog visible={isShow} onDismiss={() => setIsShow(false)}>
                     <Dialog.Title>Consulta avanzada</Dialog.Title>
-                    <Dialog.Content>
+                    <Dialog.Content style={[
+                        orientation === Orientation.landscape && {
+                            maxHeight: 150
+                        }
+                    ]}>
                         <Text variant='labelMedium'>Seleccione el inicio y fin de la consulta{'\n'}</Text>
                         <Text variant='labelMedium'>Recuerde que solo se puede consultar hasta 30 dias naturales.{'\n'}</Text>
                         <Text variant='labelMedium'>Seleccione las sucursales de manera personalizada.{'\n'}</Text>

@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, View, Image } from 'react-native';
 
-import { RootStackParamList, Service } from '../types/types'
+import { Orientation, RootStackParamList, Service } from '../types/types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Appbar, Button, IconButton, Text, TextInput } from 'react-native-paper';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -21,7 +21,7 @@ export const DomainScreen = ({ navigation, route }: Props) => {
 
     const {
         theme: { theme: { colors, dark } },
-        config: { domain }
+        config: { domain, orientation }
     } = useAppSelector(state => state);
 
     const AppDispatch = useAppDispatch();
@@ -83,7 +83,6 @@ export const DomainScreen = ({ navigation, route }: Props) => {
         setValue('domain', domain.replace('https://', '').replace('http://', '').replace('/', ''));
     }, []);
 
-
     return (
         <Animated.View entering={FadeInDown.delay(350).duration(400)} style={{ flex: 1 }}>
             <Loading refresh={isLoading} />
@@ -94,29 +93,47 @@ export const DomainScreen = ({ navigation, route }: Props) => {
                         {
                             padding: 15,
                             justifyContent: 'center'
+                        },
+                        orientation === Orientation.landscape && {
+                            flexDirection: 'row'
                         }
                     ]}
                 >
-                    <IconButton accessible={false} icon='code-json' size={40} style={{ alignSelf: 'center' }} />
-                    <Text style={{ marginVertical: 5, textAlign: 'center', fontWeight: 'bold' }} variant='titleLarge'>¡Bienvenido!</Text>
-                    <Text style={{ marginVertical: 5, textAlign: 'center', marginHorizontal: 10, color: colors.outline }}>Para empezar a utilizar esta aplicación, proporcione la dirección del servidor de su central de alarmas</Text>
-                    <Input
-                        formInputs={control._defaultValues}
-                        control={control}
-                        name={'domain'}
-                        label="Dirección del Servidor"
-                        placeholder="Type something"
-                        style={{
-                            backgroundColor: 'transparent'
-                        }}
-                        left={<TextInput.Icon icon="server" color={(focused) => focused ? undefined : colors.primary} />}
-                    />
-                    <Button
-                        children='Ok'
-                        style={{ alignSelf: 'center', marginVertical: 10 }}
-                        mode="contained"
-                        onPress={handleSubmit(onSubmit)}
-                    />
+                    <View style={[
+                        orientation === Orientation.landscape && {
+                            flex: 1
+                        }
+                    ]}>
+                        <IconButton accessible={false} icon='code-json' size={40} style={{ alignSelf: 'center' }} />
+                        <Text style={{ marginVertical: 5, textAlign: 'center', fontWeight: 'bold' }} variant='titleLarge'>¡Bienvenido!</Text>
+                        <Text style={{ marginVertical: 5, textAlign: 'center', marginHorizontal: 10, color: colors.outline }}>Para empezar a utilizar esta aplicación, proporcione la dirección del servidor de su central de alarmas</Text>
+                    </View>
+                    <View style={[
+                        orientation === Orientation.landscape && {
+                            flex: 1,
+                            justifyContent: 'center',
+                            paddingHorizontal: 15
+                        }
+                    ]}>
+                        <Input
+                            autoCapitalize='none'
+                            formInputs={control._defaultValues}
+                            control={control}
+                            name={'domain'}
+                            label="Dirección del Servidor"
+                            placeholder="Type something"
+                            style={{
+                                backgroundColor: 'transparent'
+                            }}
+                            left={<TextInput.Icon icon="server" color={(focused) => focused ? undefined : colors.primary} />}
+                        />
+                        <Button
+                            children='Ok'
+                            style={{ alignSelf: 'center', marginVertical: 10 }}
+                            mode="contained"
+                            onPress={handleSubmit(onSubmit)}
+                        />
+                    </View>
                 </View>
             </KeyboardAvoidingView>
         </Animated.View>

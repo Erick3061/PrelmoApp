@@ -28,6 +28,8 @@ import { SearchScreen } from '../screens/SearchScreen';
 import { ResultAccountScreen } from '../screens/ResultAccountScreen';
 import { ResultAccountsScreen } from '../screens/ResultAccountsScreen';
 import { TableScreen } from '../screens/TableScreen';
+import { OrientationLocker, OrientationType } from 'react-native-orientation-locker';
+import { ChangePasswordScreen } from '../screens/ChangePasswordScreen';
 
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -128,6 +130,10 @@ export const Stack = () => {
                 <NavigationContainer theme={theme}>
                     <NotificationProvider>
                         <StatusBar backgroundColor={theme.colors.background} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+                        <OrientationLocker
+                            orientation='ALL_ORIENTATIONS_BUT_UPSIDE_DOWN'
+                            onChange={(props) => (props === OrientationType.PORTRAIT) ? AppDispatch(setOrientation(Orientation.portrait)) : AppDispatch(setOrientation(Orientation.landscape))}
+                        />
                         <RootStack.Navigator>
                             {
                                 (status === 'logued')
@@ -154,6 +160,10 @@ export const Stack = () => {
 
                             <RootStack.Group screenOptions={{ presentation: 'transparentModal' }}>
                                 <RootStack.Screen name="TCAP" options={{ headerShown: false, }} component={TCAPScreen} />
+                            </RootStack.Group>
+
+                            <RootStack.Group screenOptions={{ presentation: 'formSheet' }}>
+                                <RootStack.Screen name="ChangePasswordScreen" options={{ title: 'Cambiar contraseña' }} component={ChangePasswordScreen} />
                             </RootStack.Group>
 
                         </RootStack.Navigator>

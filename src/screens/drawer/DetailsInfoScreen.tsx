@@ -1,7 +1,7 @@
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Image, TouchableOpacity, View } from 'react-native';
-import { RootStackParamList } from '../../types/types';
+import { Orientation, RootStackParamList } from '../../types/types';
 import { useAppSelector } from '../../app/hooks';
 import { Text } from 'react-native-paper';
 import { SocialNetworks } from '../../components/SocialNetworks';
@@ -9,18 +9,27 @@ import { SocialNetworks } from '../../components/SocialNetworks';
 interface Props extends NativeStackScreenProps<RootStackParamList, 'DetailsInfoScreen'> { };
 export const DetailsInfoScreen = ({ navigation, route }: Props) => {
     const {
-        theme: { theme: { colors, dark } }
+        theme: { theme: { colors, dark } },
+        config: { orientation }
     } = useAppSelector(state => state);
     return (
-        <View style={{ flex: 1, justifyContent: 'space-evenly', padding: 15 }}>
+        <View
+            style={[
+                { flex: 1, justifyContent: 'space-evenly', padding: 15 },
+                orientation === Orientation.landscape && { flexDirection: 'row', padding: 15 }
+            ]}
+        >
             <Image
                 style={[
                     { resizeMode: 'contain', width: '70%', height: 100, alignSelf: 'center' },
-                    dark && { tintColor: colors.onSurface }
+                    dark && { tintColor: colors.onSurface },
+                    orientation === Orientation.landscape && {
+                        width: '50%'
+                    }
                 ]}
                 source={require('../../assets/prelmo.png')}
             />
-            <View>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
                 <View style={{ paddingHorizontal: 25 }}>
                     <Text variant='titleSmall' style={[, { paddingVertical: 10, textAlign: 'center' }]}>Versión: 1.0</Text>
                     <Text variant='titleSmall' style={[, { paddingVertical: 10, }]}>© 2021-2023 Protección Electrónica Monterrey S.A. de C.V</Text>

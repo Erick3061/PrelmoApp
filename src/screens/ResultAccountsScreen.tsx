@@ -97,7 +97,17 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            title: (report === 'ap-ci') ? 'Apertura y cierre' : (report === 'event-alarm') ? 'Evento de alarma' : (report === 'batery') ? 'Problemas de batería' : (report === 'state') ? 'Estado de sucursales' : 'Horario de aperturas y cierres',
+            title:
+                (report === 'ap-ci')
+                    ? 'Apertura y cierre'
+                    : (report === 'event-alarm')
+                        ? 'Evento de alarma'
+                        : (report === 'batery')
+                            ? `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Problemas de batería`
+                            : (report === 'state')
+                                ? `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Estado de sucursales`
+                                : `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Horario de aperturas y cierres`
+            ,
             headerLeft: (() =>
                 isDownloadDoc
                     ?
@@ -161,7 +171,7 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
             ),
             headerLargeTitle: true,
         });
-    }, [navigation, isLoading, isFetching, data, isDownloadDoc]);
+    }, [navigation, isLoading, isFetching, data, isDownloadDoc, orientation]);
 
     useEffect(() => {
         setFilterData(data);
@@ -457,9 +467,15 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
 
     return (
         <>
-            {_renderPercentajes()}
-            <Text style={[{ borderLeftWidth: 3, borderColor: colors.primary, color: colors.text }, fonts.titleMedium]}>  {(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}</Text>
+            <Text
+                style={[
+                    { borderLeftWidth: 3, borderColor: colors.primary, color: colors.text, marginVertical: 10 },
+                    fonts.titleMedium,
+                    orientation === Orientation.landscape && { display: 'none' }
+                ]}
+            >  {(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}</Text>
             <Loading refresh={isLoading || isFetching} />
+            {_renderPercentajes()}
             {
                 (report === 'batery' || report === 'state')
                     ?

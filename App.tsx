@@ -6,7 +6,6 @@ import { store } from './src/app/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RequestProvider } from './src/context/RequestContext';
 
-
 export const App = () => {
 
   const queryClient = new QueryClient();

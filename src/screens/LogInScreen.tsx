@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useContext, useEffect, useLayoutEffect, useState, useRef } from 'react';
-import { Image, KeyboardAvoidingView, Platform, View, TouchableWithoutFeedback, Keyboard, ScrollView, Alert, TextInput as NativeTextInput } from 'react-native';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { Image, KeyboardAvoidingView, Platform, View, TouchableWithoutFeedback, Keyboard, ScrollView, Alert } from 'react-native';
 import { RootStackParamList, Saved, Service } from '../types/types';
 
 import { Appbar, Button, Checkbox, IconButton, Text, TextInput, TouchableRipple } from 'react-native-paper';
@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Input } from '../components/Input';
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { setUser, updateFE, updateSaved } from '../features/configSlice';
 import keychain from 'react-native-keychain';
@@ -225,7 +225,12 @@ export const LogInScreen = ({ navigation, route }: Props) => {
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <>
                 <Loading refresh={isLoading} />
-                <Animated.View entering={FadeInDown.delay(350).duration(400)} style={[style.container, { paddingHorizontal: '7%', justifyContent: 'center' }]}>
+                <Animated.View entering={FadeInDown.delay(350).duration(400)}
+                    style={[
+                        style.container,
+                        { paddingHorizontal: '7%', justifyContent: 'center' }
+                    ]}
+                >
                     <View>
                         <ScrollView>
                             <Text style={{ marginVertical: 5, textAlign: 'center', fontWeight: 'bold' }} variant='titleLarge'>¡Bienvenido!</Text>

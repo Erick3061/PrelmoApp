@@ -39,7 +39,7 @@ export const TargetPercentaje = ({ max, percentage, icon, text, textLarge, style
                     {amount && <Text variant='labelSmall' style={[{ color: colors.text, marginVertical: 2, fontWeight: '700' }]}>{amount}</Text>}
                 </View>
             </View>
-            {/* <Text variant='labelSmall' style={{ textAlign: 'center' }}>{textLarge}</Text> */}
+            <Text variant='labelSmall' style={{ textAlign: 'center' }}>{textLarge}</Text>
         </View>
     )
 }

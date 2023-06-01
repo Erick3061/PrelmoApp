@@ -2,31 +2,24 @@ import { DrawerContentComponentProps, DrawerContentScrollView, createDrawerNavig
 import React from 'react'
 import { Orientation, RootDrawerParamList, RootStackParamList } from '../types/types';
 import { HomeScreen } from '../screens/drawer/HomeScreen';
-import { ProfileScreen } from '../screens/drawer/ProfileScreen';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { useQueryClient } from '@tanstack/react-query';
-import { Platform, PressableProps, StatusBar, View } from 'react-native';
+import { Platform, StatusBar, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Appbar, IconButton, Text } from 'react-native-paper';
+import { IconButton, Text } from 'react-native-paper';
 import { logOut } from '../features/configSlice';
 import { Drawer as DrawerPapper } from 'react-native-paper';
 import { DrawerActions } from '@react-navigation/native';
 import { DownloadScreen } from '../screens/DownloadScreen';
 import { DetailsInfoScreen } from '../screens/drawer/DetailsInfoScreen';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ChangePasswordScreen } from '../screens/drawer/ChangePasswordScreen';
 import { SelectAccountScreen } from '../screens/drawer/SelectAccountScreen';
 import { SelectGroupsScreen } from '../screens/drawer/SelectGroupsScreen';
 import { SelectAccountsScreen } from '../screens/drawer/SelectAccountsScreen';
+import { ProfileScreen } from '../screens/drawer/Profilescreen';
 
 
 const DrawerNav = createDrawerNavigator<RootDrawerParamList>();
-
-interface PropsItem extends PressableProps {
-    icon?: string;
-    label: string;
-    active?: boolean;
-}
 
 interface Props extends NativeStackScreenProps<RootStackParamList, 'Drawer'> { };
 export const Drawer = ({ }: Props) => {
@@ -45,7 +38,7 @@ export const Drawer = ({ }: Props) => {
                 <DrawerNav.Screen name="SelectGroupsScreen" options={{ title: 'Grupal' }} component={SelectGroupsScreen} />
                 <DrawerNav.Screen name="SelectAccountsScreen" options={{ title: 'Avanzado' }} component={SelectAccountsScreen} />
                 <DrawerNav.Screen name="DownloadScreen" options={{ title: 'Descargas' }} component={DownloadScreen} />
-                <DrawerNav.Screen name="ChangePasswordScreen" options={{ title: 'Cambiar contraseña' }} component={ChangePasswordScreen} />
+                <DrawerNav.Screen name="ProfileScreen" options={{ title: 'Perfil' }} component={ProfileScreen} />
                 <DrawerNav.Screen name="DetailsInfoScreen" options={{ title: 'Detalles' }} component={DetailsInfoScreen} />
             </DrawerNav.Navigator >
         </>
@@ -126,10 +119,10 @@ const MenuContent = ({ navigation, state, descriptors }: DrawerContentComponentP
                         onPress={() => navigation.navigate<keyof RootDrawerParamList>('DownloadScreen')}
                     />
                     <DrawerPapper.Item
-                        active={routeNames[index] === 'ChangePasswordScreen' && true}
-                        icon={`account-circle${routeNames[index] === 'ChangePasswordScreen' ? '' : '-outline'}`}
-                        label="Cambiar contraseña"
-                        onPress={() => navigation.navigate<keyof RootDrawerParamList>('ChangePasswordScreen')}
+                        active={routeNames[index] === 'PerfilScreen' && true}
+                        icon={`account-circle${routeNames[index] === 'PerfilScreen' ? '' : '-outline'}`}
+                        label="Perfil"
+                        onPress={() => navigation.navigate<keyof RootDrawerParamList>('ProfileScreen')}
                     />
                     <DrawerPapper.Item
                         active={routeNames[index] === 'DetailsInfoScreen' && true}
