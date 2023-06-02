@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { Platform, StatusBar, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { IconButton, Text } from 'react-native-paper';
+import { IconButton, Switch, Text } from 'react-native-paper';
 import { logOut } from '../features/configSlice';
 import { Drawer as DrawerPapper } from 'react-native-paper';
 import { DrawerActions } from '@react-navigation/native';
@@ -17,6 +17,8 @@ import { SelectAccountScreen } from '../screens/drawer/SelectAccountScreen';
 import { SelectGroupsScreen } from '../screens/drawer/SelectGroupsScreen';
 import { SelectAccountsScreen } from '../screens/drawer/SelectAccountsScreen';
 import { ProfileScreen } from '../screens/drawer/Profilescreen';
+import { updateTheme } from '../features/themeSlice';
+import { CombinedDarkTheme, CombinedDefaultTheme } from '../config/Theming';
 
 
 const DrawerNav = createDrawerNavigator<RootDrawerParamList>();
@@ -56,6 +58,10 @@ const MenuContent = ({ navigation, state, descriptors }: DrawerContentComponentP
     const AppDispatch = useAppDispatch();
     const queryClient = useQueryClient();
     const insets = useSafeAreaInsets();
+
+    const changeTheme = () => {
+        dark ? AppDispatch(updateTheme(CombinedDefaultTheme)) : AppDispatch(updateTheme(CombinedDarkTheme))
+    }
 
     return (
         <View style={[
@@ -130,33 +136,19 @@ const MenuContent = ({ navigation, state, descriptors }: DrawerContentComponentP
                         label="Acerca de Prelmo"
                         onPress={() => navigation.navigate<keyof RootDrawerParamList>('DetailsInfoScreen')}
                     />
+                    <DrawerPapper.Item
+                        label={'Tema oscuro'}
+                        onPress={changeTheme}
+                        right={() =>
+                            <Switch value={dark ? true : false}
+                                onChange={({ nativeEvent: { value } }) => {
+                                    value
+                                        ? AppDispatch(updateTheme(CombinedDarkTheme))
+                                        : AppDispatch(updateTheme(CombinedDefaultTheme))
+                                }}
+                            />}
+                    />
                 </DrawerPapper.Section>
-                <View style={{ paddingVertical: 5 }}>
-                    {/* <View style={{ alignItems: 'center', marginVertical: 5, marginHorizontal: 10 }}>
-                        <View style={[styles.containerST, { borderRadius: roundness * 3 }]}>
-                            <Pressable
-                                style={[styles.containerOpT, { borderRadius: roundness * 3, borderColor: colors.primary }, (!dark) && { backgroundColor: colors.primary }]}
-                                onPress={() => dispatch(updateTheme(CombinedLightTheme))}
-                            >
-                                <Icon style={[styles.icon]} name="sunny-outline" size={iconSize} color={(!dark) ? colors.background : colors.onSurface} />
-                                <Text style={[fonts.titleSmall, (!dark) && { color: colors.background }]}>Claro</Text>
-                            </Pressable>
-                            <Pressable
-                                style={[styles.containerOpT, { borderRadius: roundness * 3, borderColor: colors.primary }, (dark) && { backgroundColor: colors.primary }]}
-                                onPress={() => dispatch(updateTheme(CombinedDarkTheme))}
-                            >
-                                <Icon style={[styles.icon]} name="moon-outline" size={iconSize} />
-                                <Text style={[fonts.titleSmall, (dark) && { color: colors.background }]}>Oscuro</Text>
-                            </Pressable>
-                        </View>
-                    </View> */}
-                    {/* <RenderItem icon="home" label="Cerrar sesión" onPress={async () => {
-                        try {
-                            queryClient.clear();
-                            AppDispatch(logOut());
-                        } catch (error) { }
-                    }} /> */}
-                </View>
                 <DrawerPapper.Item
                     icon="logout"
                     label='Cerrar sesión'
@@ -170,3 +162,4 @@ const MenuContent = ({ navigation, state, descriptors }: DrawerContentComponentP
     )
 }
 
+[]
