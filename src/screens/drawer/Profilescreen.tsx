@@ -41,6 +41,7 @@ export const ProfileScreen = (props: Props) => {
                                 paddingHorizontal: 15,
                                 paddingVertical: 30,
                                 alignItems: 'center',
+                                shadowColor: colors.primary
                             }
                         ]}
                     >

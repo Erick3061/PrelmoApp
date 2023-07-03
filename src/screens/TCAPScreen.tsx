@@ -42,9 +42,9 @@ export const TCAPScreen = ({ navigation, route: { params } }: Props) => {
                         height: '90%',
                         padding: 10,
                         borderRadius: roundness * 4,
-                        backgroundColor: backgroundColor,
+                        backgroundColor: colors.onPrimary,
                     },
-                    { shadowColor: colors.primary }
+                    { shadowColor: colors.background }
                 ]}>
                     <View>
                         <IconButton size={30} icon='close' style={{ alignSelf: 'flex-end' }} onPress={() => navigation.goBack()} />

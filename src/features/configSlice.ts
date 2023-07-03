@@ -5,6 +5,7 @@ import { RootState } from "../app/store";
 import EncryptedStorage from "react-native-encrypted-storage";
 import keychain from 'react-native-keychain';
 import { Account, Group, User } from "../interface/interface";
+import { updatePrimaryColor } from "./themeSlice";
 
 
 interface ConfigState {
@@ -56,8 +57,9 @@ export const updateDomain = createAsyncThunk('updateDomain', async (domain: stri
     return { domain, instance };
 });
 
-export const setUser = createAsyncThunk('LogIn', async (User: User) => {
+export const setUser = createAsyncThunk('LogIn', async (User: User, { dispatch }) => {
     try {
+        User.company.primaryColor && dispatch(updatePrimaryColor(User.company.primaryColor));
         await EncryptedStorage.setItem(Service["Encrypted-Token"], User.token);
         await EncryptedStorage.setItem(Service["Encrypted-RefreshToken"], User.refreshToken);
         return User;
@@ -68,8 +70,9 @@ export const setUser = createAsyncThunk('LogIn', async (User: User) => {
     }
 });
 
-export const logOut = createAsyncThunk('logOut', async () => {
+export const logOut = createAsyncThunk('logOut', async (_, { dispatch }) => {
     try {
+        dispatch(updatePrimaryColor());
         await EncryptedStorage.removeItem(Service["Encrypted-Token"]);
         await EncryptedStorage.removeItem(Service["Encrypted-RefreshToken"]);
     } catch (error) {

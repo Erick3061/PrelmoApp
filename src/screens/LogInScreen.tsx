@@ -29,7 +29,7 @@ type InputsLogIn = {
 }
 
 export const LogInScreen = ({ navigation, route }: Props) => {
-    const { control, handleSubmit, reset, setValue, getValues } = useForm<InputsLogIn>({ defaultValues: { email: '', password: '' } });
+    const { control, handleSubmit, reset, setValue, getValues } = useForm<InputsLogIn>({ defaultValues: { email: 'eds@hotmail.com', password: '1234' } });
     const [isShow, setIsShow] = useState<boolean>(true);
     const [getted, setGetted] = useState<InputsLogIn>();
     const [isChanged, setIsChanged] = useState<boolean>(false);

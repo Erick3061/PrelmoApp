@@ -102,12 +102,22 @@ export interface Events {
 }
 
 
+export interface Company {
+    id: string;
+    name: string;
+    shortName?: string;
+    primaryColor?: string;
+    logoPath?: string;
+    serviceIsActive: boolean;
+}
+
 export interface User {
     id: string;
     fullName: string;
     email: string;
     termsAndConditions: boolean;
     roles: Array<string>;
+    company: Company;
     token: string;
     refreshToken: string;
 }

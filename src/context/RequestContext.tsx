@@ -120,12 +120,12 @@ export const RequestProvider = ({ children }: any) => {
     };
 
     const GetMyAccount = async () => {
-        const response = await instance.get('accounts/my-individual-accounts');
+        const response = await instance.get('accounts/individual');
         return response.data as { accounts: Array<Account> };
     };
 
     const GetGroups = async () => {
-        const response = await instance.get('accounts/my-groups');
+        const response = await instance.get('accounts/groups');
         return response.data as { groups: Array<Group> };
     };
 

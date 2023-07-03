@@ -13,7 +13,7 @@ import { DownloadScreen } from '../screens/DownloadScreen';
 import { SplashScreen } from '../screens/SplashScreen';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { Alert, ColorSchemeName, Dimensions, Platform, StatusBar, useColorScheme } from 'react-native';
-import { updateTheme } from '../features/themeSlice';
+import { updatePrimaryColor, updateTheme } from '../features/themeSlice';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../config/Theming';
 import { logOut, setOrientation, setScreen, setUser, updateDirectory, updateDomain, updateFE, updateSaved, updateStatus, updateisCompatible } from '../features/configSlice';
 import RNFS from 'react-native-fs';
@@ -36,7 +36,7 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 export const Stack = () => {
     const {
-        theme: { theme, whithSystem },
+        theme: { theme, Primary, whithSystem },
         config: { status, saved }
     } = useAppSelector(state => state);
     const { CheckAuth } = useContext(RequestContext);
@@ -114,7 +114,6 @@ export const Stack = () => {
     useEffect(() => {
         // if (whithSystem)
         (color === 'light') ? AppDispatch(updateTheme(CombinedDefaultTheme)) : AppDispatch(updateTheme(CombinedDarkTheme));
-        // else {
         //Todo cambiar el tema manual
         // }
     }, [color]);
