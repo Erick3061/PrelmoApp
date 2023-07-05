@@ -29,7 +29,7 @@ type InputsLogIn = {
 }
 
 export const LogInScreen = ({ navigation, route }: Props) => {
-    const { control, handleSubmit, reset, setValue, getValues } = useForm<InputsLogIn>({ defaultValues: { email: 'eds@hotmail.com', password: '1234' } });
+    const { control, handleSubmit, reset, setValue, getValues } = useForm<InputsLogIn>({ defaultValues: { email: '', password: '' } });
     const [isShow, setIsShow] = useState<boolean>(true);
     const [getted, setGetted] = useState<InputsLogIn>();
     const [isChanged, setIsChanged] = useState<boolean>(false);
@@ -146,11 +146,13 @@ export const LogInScreen = ({ navigation, route }: Props) => {
             const data = await keychain.getGenericPassword({ service: Service['Keychain-Saved-Biometry'] });
             if (data) onSubmit({ email: data.username, password: data.password });
         } catch (error) {
-            notification({
-                type: 'warning',
-                title: 'Alerta',
-                text: `${error}`,
-            });
+            if (!`${error}`.includes('10') && !`${error}`.includes('13')) {
+                notification({
+                    type: 'warning',
+                    title: 'Alerta',
+                    text: `${error}`,
+                });
+            }
         }
     }
 
@@ -176,7 +178,7 @@ export const LogInScreen = ({ navigation, route }: Props) => {
                     setGetted(undefined);
             }
         } catch (error) {
-            handleError(`${error}`);
+            handleError(`${error} `);
         }
     }
 
@@ -236,7 +238,7 @@ export const LogInScreen = ({ navigation, route }: Props) => {
                             <Text style={{ marginVertical: 5, textAlign: 'center', fontWeight: 'bold' }} variant='titleLarge'>¡Bienvenido!</Text>
                             <Text style={{ textAlign: 'center', color: colors.outline }}>Ingrese sus datos para iniciar sesión</Text>
                             <KeyboardAvoidingView style={{ flex: 1 }} enabled behavior={Platform.OS === "ios" ? "padding" : undefined}>
-                                <TextInput
+                                {/* <TextInput
                                     disabled
                                     label="Dirección del Servidor"
                                     placeholder="Type something"
@@ -253,7 +255,7 @@ export const LogInScreen = ({ navigation, route }: Props) => {
                                         />
                                     }
                                     value={domain.replace('https://', '').replace('http://', '').replace('/', '')}
-                                />
+                                /> */}
                                 <Input
                                     editable={(!isLoading)}
                                     formInputs={control._defaultValues}
@@ -340,7 +342,7 @@ export const LogInScreen = ({ navigation, route }: Props) => {
                                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginVertical: 5 }}>
                                     <TouchableOpacity
                                         onPress={() => navigation.navigate('PdfScreen', {
-                                            name: 'Registro', url: `${domain}/docs/REGISTRO-PLATAFORMA.pdf`
+                                            name: 'Registro', url: `${domain.replace('/v1', '')}/docs/REGISTRO-PLATAFORMA.pdf`
                                         })}
                                         disabled={isLoading} >
                                         <Text variant='titleSmall' style={[{ textAlign: 'center', marginVertical: 10 }]}>Regístrate</Text>
@@ -353,7 +355,7 @@ export const LogInScreen = ({ navigation, route }: Props) => {
                                 </View>
 
                                 <TouchableOpacity style={{ marginVertical: 15 }} onPress={() => navigation.navigate('TCAP')} disabled={isLoading} >
-                                    <Text variant='titleSmall' style={{ textAlign: 'center' }}>Términos y condiciones y aviso de privacidad</Text>
+                                    <Text variant='titleSmall' style={{ textAlign: 'center' }}>Términos, condiciones y aviso de privacidad</Text>
                                 </TouchableOpacity>
                             </KeyboardAvoidingView>
                             <SocialNetworks />

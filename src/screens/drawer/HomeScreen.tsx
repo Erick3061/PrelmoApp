@@ -4,12 +4,17 @@ import { Orientation } from '../../types/types';
 import { useAppSelector } from '../../app/hooks';
 import { Text } from 'react-native-paper';
 import { SocialNetworks } from '../../components/SocialNetworks';
+import { CombinedDarkTheme, CombinedDefaultTheme } from '../../config/Theming';
+import Values from 'values.js';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const HomeScreen = () => {
     const {
         theme: { theme: { dark, colors } },
         config: { orientation }
     } = useAppSelector(state => state);
+
+    // const deg = new Values(colors.primary).all(2);
     return (
         <View style={[
             { flex: 1, justifyContent: 'space-around' },
@@ -25,18 +30,19 @@ export const HomeScreen = () => {
             ]}>
                 <Image
                     style={[
-                        { resizeMode: 'contain', width: '70%', height: 100, alignSelf: 'center' },
+                        { resizeMode: 'contain', width: '70%', height: '20%', alignSelf: 'center' },
                         dark && { tintColor: colors.onSurface }
                     ]}
-                    source={require('../../assets/prelmo.png')}
+                    source={require('../../assets/prelmo2.png')}
                 />
             </View>
             <View style={[
                 { flex: 1, justifyContent: 'center', alignItems: 'center' }
             ]}>
-                <Text variant='titleLarge' style={[styles.text, { fontWeight: 'bold' }]}>central monitoreo pemsa 24hrs</Text>
-                <Text variant='titleLarge' style={[styles.text, { fontWeight: 'bold' }]}>222 141 12 30</Text>
+                <Text variant='titleMedium' style={[styles.text]}>central monitoreo 24hrs</Text>
+                <Text variant='titleMedium' style={[styles.text]}>222 141 12 30</Text>
                 <SocialNetworks />
+                <Text variant='labelLarge'>By PEMSA development</Text>
             </View>
         </View>
     )

@@ -59,7 +59,7 @@ export const updateDomain = createAsyncThunk('updateDomain', async (domain: stri
 
 export const setUser = createAsyncThunk('LogIn', async (User: User, { dispatch }) => {
     try {
-        User.company.primaryColor && dispatch(updatePrimaryColor(User.company.primaryColor));
+        // User.company && User.company.primaryColor && dispatch(updatePrimaryColor(User.company.primaryColor));
         await EncryptedStorage.setItem(Service["Encrypted-Token"], User.token);
         await EncryptedStorage.setItem(Service["Encrypted-RefreshToken"], User.refreshToken);
         return User;

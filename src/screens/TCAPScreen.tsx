@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Animated, { FadeInDown, FadeOutDown, SlideInDown, SlideOutDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { RootStackParamList } from '../types/types';
 import { Button, IconButton, Text } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
@@ -13,8 +13,7 @@ import { RequestContext } from '../context/RequestContext';
 
 interface Props extends NativeStackScreenProps<RootStackParamList, 'TCAP'> { };
 export const TCAPScreen = ({ navigation, route: { params } }: Props) => {
-    const { theme: { colors, roundness, dark } } = useAppSelector(state => state.theme);
-    const backgroundColor: string = dark ? Color(colors.background).darken(.4).toString() : colors.background;
+    const { theme: { colors, roundness } } = useAppSelector(state => state.theme);
     const accept: boolean = false;
     const AppDispatch = useAppDispatch();
     const { AccepTerms } = useContext(RequestContext);
@@ -34,7 +33,7 @@ export const TCAPScreen = ({ navigation, route: { params } }: Props) => {
 
     return (
         <Animated.View entering={FadeInDown} exiting={FadeOutDown} style={{ flex: 1 }}>
-            <SafeAreaView style={{ width: '100%', height: '100%', backgroundColor: Color(colors.backdrop).fade(.9).toString(), justifyContent: 'center', alignItems: 'center' }}>
+            <SafeAreaView style={{ width: '100%', height: '100%', backgroundColor: colors.elevation.level0, justifyContent: 'center', alignItems: 'center' }}>
                 <Animated.View style={[
                     {
                         position: 'absolute',
@@ -42,9 +41,10 @@ export const TCAPScreen = ({ navigation, route: { params } }: Props) => {
                         height: '90%',
                         padding: 10,
                         borderRadius: roundness * 4,
-                        backgroundColor: colors.onPrimary,
+                        backgroundColor: colors.elevation.level3,
+                        elevation: 3,
                     },
-                    { shadowColor: colors.background }
+                    { shadowColor: colors.outline }
                 ]}>
                     <View>
                         <IconButton size={30} icon='close' style={{ alignSelf: 'flex-end' }} onPress={() => navigation.goBack()} />

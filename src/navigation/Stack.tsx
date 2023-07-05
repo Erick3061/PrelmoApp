@@ -36,8 +36,8 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 export const Stack = () => {
     const {
-        theme: { theme, Primary, whithSystem },
-        config: { status, saved }
+        theme: { theme },
+        config: { status }
     } = useAppSelector(state => state);
     const { CheckAuth } = useContext(RequestContext);
     const color: ColorSchemeName = useColorScheme();
@@ -96,15 +96,15 @@ export const Stack = () => {
             (saved === null) && AppDispatch(updateSaved(null));
 
 
-            const domain: string = await EncryptedStorage.getItem(Service["Encrypted-Domain"]) ?? '';
+            // const domain: string = await EncryptedStorage.getItem(Service["Encrypted-Domain"]) ?? '';
 
-            if (domain !== '') {
-                AppDispatch(updateDomain(domain));
-                autoLogIn();
-            }
-            else {
-                AppDispatch(updateStatus('unlogued'));
-            }
+            // if (domain !== '') {
+            AppDispatch(updateDomain('https://api-consultas.prelmo.com/v1'));
+            autoLogIn();
+            // }
+            // else {
+            //     AppDispatch(updateStatus('unlogued'));
+            // }
 
         } catch (error) {
             Alert.alert('Error', `${error}`);

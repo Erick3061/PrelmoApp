@@ -117,7 +117,7 @@ export interface User {
     email: string;
     termsAndConditions: boolean;
     roles: Array<string>;
-    company: Company;
+    company?: Company;
     token: string;
     refreshToken: string;
 }

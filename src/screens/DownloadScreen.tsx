@@ -7,7 +7,7 @@ import RNFS from 'react-native-fs';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { MIMETypes, RootDrawerParamList } from '../types/types';
 import Share from 'react-native-share';
-import { Button, Portal, Text } from 'react-native-paper';
+import { Button, IconButton, Portal, Text } from 'react-native-paper';
 import { useAppSelector } from '../app/hooks';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
 import { IconMenu } from '../components/IconMenu';
@@ -57,28 +57,29 @@ export const DownloadScreen = ({ navigation }: Props) => {
     }, [selected]);
 
 
-    const Item = ({ index, item, separators }: ListRenderItemInfo<RNFS.ReadDirItem>) => {
-        const path = (item.name.split('.')[1] === 'pdf') ? require('../assets/pdf.png') : require('../assets/xls.png');
-        const size: number = 35;
+    const Item = ({ item }: ListRenderItemInfo<RNFS.ReadDirItem>) => {
+        const acron = item.name.split('.')[1];
+        let icon: string = '';
+        let color: string = colors.primary;
+        if (acron === 'pdf') {
+            icon = 'file-pdf-box';
+            color = colors.danger;
+        } else if (acron === 'xlsx') {
+            icon = 'file-excel-box';
+            color = colors.success;
+        };
+
         return (
             <Pressable
                 style={{ marginVertical: 5, flexDirection: 'row', width: '100%', height: 50, alignItems: 'center' }}
-                android_ripple={{ color: Color(colors.primary).fade(.9).toString() }}
+                android_ripple={{ color: colors.elevation.level2 }}
                 onPress={() => item.isFile() && setSelected(item)}
             >
-                {
-                    item.isFile() && <Image
-                        source={path}
-                        style={[
-                            {
-                                width: size,
-                                height: size,
-                                resizeMode: 'contain',
-                            }
-                        ]}
-                    />
-                }
-                <Text variant='labelMedium' style={{ flex: 1, paddingHorizontal: 5 }}>{item.name}</Text>
+                <IconButton icon={item.isFile() ? icon : 'folder'} size={45} iconColor={color} style={{ padding: 0, margin: 0 }} />
+                <View style={{ justifyContent: 'center', flex: 1, marginRight: 15 }}>
+                    <Text variant='labelMedium' numberOfLines={1}>{item.name}</Text>
+                    <Text variant='labelSmall' numberOfLines={1}>{`${item.mtime}`}</Text>
+                </View>
             </Pressable>
         );
     };

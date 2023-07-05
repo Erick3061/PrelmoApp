@@ -125,7 +125,7 @@ const MenuContent = ({ navigation, state, descriptors }: DrawerContentComponentP
                         onPress={() => navigation.navigate<keyof RootDrawerParamList>('DownloadScreen')}
                     />
                     <DrawerPapper.Item
-                        active={routeNames[index] === 'PerfilScreen' && true}
+                        active={routeNames[index] === 'ProfileScreen' && true}
                         icon={`account-circle${routeNames[index] === 'PerfilScreen' ? '' : '-outline'}`}
                         label="Perfil"
                         onPress={() => navigation.navigate<keyof RootDrawerParamList>('ProfileScreen')}
