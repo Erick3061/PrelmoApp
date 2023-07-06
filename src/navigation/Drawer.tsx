@@ -25,7 +25,9 @@ const DrawerNav = createDrawerNavigator<RootDrawerParamList>();
 
 interface Props extends NativeStackScreenProps<RootStackParamList, 'Drawer'> { };
 export const Drawer = ({ }: Props) => {
+    const AppDispatch = useAppDispatch();
     const { theme } = useAppSelector(state => state.theme);
+    const { dark } = theme;
     return (
         <>
             <StatusBar backgroundColor={theme.colors.card} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
@@ -33,6 +35,10 @@ export const Drawer = ({ }: Props) => {
                 drawerContent={props => <MenuContent {...props} />}
                 screenOptions={({ navigation, route }) => ({
                     headerLeft: ((props) => <IconButton icon='menu' onPress={() => navigation.dispatch(DrawerActions.openDrawer())} />),
+                    headerRight: () => <IconButton icon={dark ? 'white-balance-sunny' : 'weather-night'} onPress={() => {
+                        !dark ? AppDispatch(updateTheme(CombinedDarkTheme))
+                            : AppDispatch(updateTheme(CombinedDefaultTheme))
+                    }} />
                 })}
             >
                 <DrawerNav.Screen name="HomeScreen" options={{ title: 'Inicio' }} component={HomeScreen} />
@@ -137,16 +143,14 @@ const MenuContent = ({ navigation, state, descriptors }: DrawerContentComponentP
                         onPress={() => navigation.navigate<keyof RootDrawerParamList>('DetailsInfoScreen')}
                     />
                     <DrawerPapper.Item
-                        label={'Tema oscuro'}
+                        label={'Tema'}
                         onPress={changeTheme}
                         right={() =>
-                            <Switch value={dark ? true : false}
-                                onChange={({ nativeEvent: { value } }) => {
-                                    value
-                                        ? AppDispatch(updateTheme(CombinedDarkTheme))
-                                        : AppDispatch(updateTheme(CombinedDefaultTheme))
-                                }}
-                            />}
+                            <IconButton icon={dark ? 'white-balance-sunny' : 'weather-night'} onPress={() => {
+                                !dark ? AppDispatch(updateTheme(CombinedDarkTheme))
+                                    : AppDispatch(updateTheme(CombinedDefaultTheme))
+                            }} />
+                        }
                     />
                 </DrawerPapper.Section>
                 <DrawerPapper.Item

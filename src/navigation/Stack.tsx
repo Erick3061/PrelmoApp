@@ -13,7 +13,7 @@ import { DownloadScreen } from '../screens/DownloadScreen';
 import { SplashScreen } from '../screens/SplashScreen';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { Alert, ColorSchemeName, Dimensions, Platform, StatusBar, useColorScheme } from 'react-native';
-import { updatePrimaryColor, updateTheme } from '../features/themeSlice';
+import { updateTheme } from '../features/themeSlice';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../config/Theming';
 import { logOut, setOrientation, setScreen, setUser, updateDirectory, updateDomain, updateFE, updateSaved, updateStatus, updateisCompatible } from '../features/configSlice';
 import RNFS from 'react-native-fs';
@@ -137,14 +137,19 @@ export const Stack = () => {
                             {
                                 (status === 'logued')
                                     ?
-                                    <RootStack.Group key={"Private"}>
-                                        <RootStack.Screen name="Drawer" component={Drawer} options={{ headerShown: false }} />
-                                        <RootStack.Screen name='DetailsInfoScreen' component={DetailsInfoScreen} />
-                                        <RootStack.Screen name='ResultAccountScreen' component={ResultAccountScreen} />
-                                        <RootStack.Screen name='ResultAccountsScreen' component={ResultAccountsScreen} />
-                                        <RootStack.Screen name='TableScreen' component={TableScreen} />
-                                        <RootStack.Screen name='Search' component={SearchScreen} options={{ animation: 'fade_from_bottom' }} />
-                                    </RootStack.Group>
+                                    <>
+                                        <RootStack.Group key={"Private"}>
+                                            <RootStack.Screen name="Drawer" component={Drawer} options={{ headerShown: false }} />
+                                            <RootStack.Screen name='DetailsInfoScreen' component={DetailsInfoScreen} />
+                                            <RootStack.Screen name='ResultAccountScreen' component={ResultAccountScreen} />
+                                            <RootStack.Screen name='ResultAccountsScreen' component={ResultAccountsScreen} />
+                                            <RootStack.Screen name='TableScreen' component={TableScreen} />
+                                            <RootStack.Screen name='Search' component={SearchScreen} options={{ animation: 'fade_from_bottom' }} />
+                                        </RootStack.Group>
+                                        <RootStack.Group screenOptions={{ presentation: 'formSheet' }}>
+                                            <RootStack.Screen name="ChangePasswordScreen" options={{ title: 'Cambiar contraseña' }} component={ChangePasswordScreen} />
+                                        </RootStack.Group>
+                                    </>
                                     :
                                     <RootStack.Group>
                                         <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
@@ -156,15 +161,9 @@ export const Stack = () => {
                                 <RootStack.Screen name="DomainScreen" component={DomainScreen} />
                                 <RootStack.Screen name='PdfScreen' component={PdfScreen} />
                             </RootStack.Group>
-
                             <RootStack.Group screenOptions={{ presentation: 'transparentModal' }}>
                                 <RootStack.Screen name="TCAP" options={{ headerShown: false, }} component={TCAPScreen} />
                             </RootStack.Group>
-
-                            <RootStack.Group screenOptions={{ presentation: 'formSheet' }}>
-                                <RootStack.Screen name="ChangePasswordScreen" options={{ title: 'Cambiar contraseña' }} component={ChangePasswordScreen} />
-                            </RootStack.Group>
-
                         </RootStack.Navigator>
                     </NotificationProvider>
                 </NavigationContainer>
