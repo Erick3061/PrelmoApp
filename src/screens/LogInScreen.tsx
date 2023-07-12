@@ -19,6 +19,7 @@ import { setUser, updateFE, updateSaved } from '../features/configSlice';
 import keychain from 'react-native-keychain';
 import { RequestContext } from '../context/RequestContext';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'LogInScreen'>;
@@ -35,6 +36,7 @@ export const LogInScreen = ({ navigation, route }: Props) => {
     const [isChanged, setIsChanged] = useState<boolean>(false);
     const { LogIn } = useContext(RequestContext);
     const { handleError, notification } = useContext(NotificationContext);
+    const insets = useSafeAreaInsets();
 
     const {
         theme: { theme: { colors, dark } },
@@ -189,26 +191,31 @@ export const LogInScreen = ({ navigation, route }: Props) => {
             title: '',
             header: () => {
                 return (
-                    <Appbar>
+                    <Appbar style={[dark && { backgroundColor: colors.card }]} safeAreaInsets={insets}>
                         <Image
                             source={require('../assets/prelmo2.png')}
                             style={[
                                 dark && { tintColor: colors.onSurface },
                                 {
                                     marginHorizontal: 10,
-                                    height: '100%',
-                                    width: 90,
                                     resizeMode: 'contain',
-                                    alignSelf: 'flex-start',
+                                    top: 10
+                                },
+                                Platform.OS === 'ios' ? {
+                                    height: 30,
+                                    width: 90
                                 }
+                                    : {
+                                        height: '100%',
+                                        width: 90,
+                                    }
                             ]}
                         />
                     </Appbar>
                 )
             }
         })
-    }, [navigation, dark]);
-
+    }, [navigation, dark, insets]);
 
 
     useEffect(() => {

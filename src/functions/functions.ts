@@ -1,6 +1,8 @@
 
-import { formatDate, Events, Key, Account } from '../interface/interface';
+import Values from 'values.js';
+import { formatDate, Events, Key, Account, TonalPalette } from '../interface/interface';
 import { TypeReport } from "../types/types";
+import Color from 'color';
 
 export const hextToRgb = (hex: string) => {
     const con: RegExpMatchArray | null = hex.replace('#', '').match(/.{1,2}/g);
@@ -189,4 +191,23 @@ export const getKeys: (report: TypeReport) => Array<Key<Events>> = (report) => {
                         },
                     ]
                     : [];
+}
+/**
+ * 
+ * @param color Color a obtener tonos Material Desing 3
+ * @returns Retorna un objeto de tipo TonalPalette o un arreglo de stings de tamaño 13
+ */
+export const getMD3 = (color: string): { arrTonals: Array<string>, tonals: TonalPalette } => {
+    let tonals: any = {};
+    const values = new Values(color);
+    const colorValues: Array<string> = values.all(20).reverse().map(c => c.hexString());
+    let test: Array<string> = new Array(11).fill(0).map((_, idx) => Color(color).lightness(idx * 10).hexa().toString());
+    let arrTonals: Array<string> = [...colorValues.slice(0, 6), ...test.slice(4, test.length)];
+    arrTonals[arrTonals.length - 3] = Color(arrTonals[arrTonals.length - 3]).lightness(82).hexa().toString();
+    arrTonals[arrTonals.length - 2] = Color(arrTonals[arrTonals.length - 2]).lightness(97).hexa().toString();
+    arrTonals.forEach((color, idx) => tonals[`T-${(idx === 10) ? 95 : (idx === 11) ? 99 : (idx === 12) ? 100 : idx * 10}`] = color);
+    return {
+        arrTonals,
+        tonals
+    }
 }

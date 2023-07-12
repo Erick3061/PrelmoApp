@@ -161,6 +161,7 @@ const MenuContent = ({ navigation, state, descriptors }: DrawerContentComponentP
                         AppDispatch(logOut());
                     }}
                 />
+                {Platform.OS === 'ios' && <View style={{ height: 70 }} />}
             </DrawerContentScrollView>
         </View>
     )

@@ -5,7 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useAppSelector } from '../../app/hooks';
 import { formatDate } from '../../interface/interface';
 import { CalendarContext, CalendarProvider } from '../../context/CalendarContext';
-import { Text } from 'react-native-paper';
+import { IconButton, Text } from 'react-native-paper';
 import { Orientation } from '../../types/types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -55,7 +55,7 @@ const RenderCalendar = (props: Props) => {
                             <TouchableWithoutFeedback onPress={() => setCalendar(calendar.name)}>
                                 <View style={{ flexDirection: 'row', height: height ?? minHeight, alignItems: 'flex-end' }}>
                                     <Text variant='bodyLarge' style={[styles.date, Textstyle, { fontWeight: 'normal', paddingBottom: 10 }]}>{calendar.date?.date.date ?? '--/--/--'}</Text>
-                                    <Icon name='calendar-blank' style={{ marginLeft: 10, marginBottom: 12 }} size={26} />
+                                    <IconButton icon='calendar-blank' size={26} style={{ marginRight: 0, paddingRight: 0 }} />
                                 </View>
                             </TouchableWithoutFeedback>
                             <View style={[styles.containerLabel]}>

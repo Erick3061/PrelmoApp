@@ -159,3 +159,19 @@ export interface Percentajes {
     cerradas?: percentaje;
     sinEstado?: percentaje;
 }
+
+export interface TonalPalette {
+    'T-0': string;
+    'T-10': string;
+    'T-20': string;
+    'T-30': string;
+    'T-40': string;
+    'T-50': string;
+    'T-60': string;
+    'T-70': string;
+    'T-80': string;
+    'T-90': string;
+    'T-95': string;
+    'T-99': string;
+    'T-100': string;
+}

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import Animated, { LightSpeedInRight, SlideOutRight, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Color from 'color';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Portal, IconButton, Text } from 'react-native-paper';
@@ -13,6 +13,7 @@ export const Notification = () => {
     const { show, content, closeNot, autoClose, timeOut, updateAutoClose } = useContext(NotificationContext);
     const { theme: { colors, dark, roundness } } = useAppSelector(state => state.theme);
     const backgroundColor: string = dark ? Color(colors.background).darken(.4).toString() : colors.background;
+    const { top } = useSafeAreaInsets();
 
     const x = useSharedValue(0);
 
@@ -44,9 +45,9 @@ export const Notification = () => {
 
     return (
         <Portal>
-            {
-                (show && content) &&
-                <SafeAreaView style={{ flex: 1, alignItems: 'center' }} pointerEvents='box-none'>
+            <SafeAreaView style={{ flex: 1, alignItems: 'center' }} pointerEvents='box-none'>
+                {
+                    (show && content) &&
                     <PanGestureHandler
                         onGestureEvent={eventHandler}
                         onEnded={closeNot}
@@ -118,8 +119,8 @@ export const Notification = () => {
                             />
                         </Animated.View>
                     </PanGestureHandler>
-                </SafeAreaView>
-            }
+                }
+            </SafeAreaView>
         </Portal >
     )
 }

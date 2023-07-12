@@ -4,53 +4,53 @@ import { CombinedDefaultTheme } from "../config/Theming";
 import { RootState } from "../app/store";
 import Values from "values.js";
 import Color from "color";
+import { getMD3 } from "../functions/functions";
+import { TonalPalette } from "../interface/interface";
 
 
 interface ThemeState {
     theme: AppTheme;
-    Primary: Array<Values>;
+    Primary: TonalPalette;
     whithSystem: boolean;
 }
 
 const prelmoColor: string = '#7c46a3';
-// const prelmoColor: string = '#0061a4';
-// const prelmoColor: string = '#000';
 
 const initialState: ThemeState = {
     theme: CombinedDefaultTheme,
-    Primary: new Values(prelmoColor).all(20).reverse(),
+    Primary: getMD3(prelmoColor).tonals,
     whithSystem: false,
 }
 type colors = Pick<AppTheme, 'colors'>['colors'];
 
-const getColors = ({ colors, Primary, light }: { colors: colors, Primary: Array<Values>, light: boolean }): colors => {
-    const deg = new Values(Primary[4].hexString()).all(2).reverse();
+const getColors = ({ colors, Primary, light }: { colors: colors, Primary: TonalPalette, light: boolean }): colors => {
+    const deg = new Values(Primary["T-40"]).all(2).reverse();
     return light
         ? {
             ...colors,
-            primary: Primary[4].hexString(),
-            onPrimary: Primary[10].hexString(),
-            primaryContainer: Primary[9].hexString(),
-            onPrimaryContainer: Primary[1].hexString(),
+            primary: Primary["T-40"],
+            onPrimary: Primary["T-100"],
+            primaryContainer: Primary["T-90"],
+            onPrimaryContainer: Primary["T-10"],
 
-            secondary: Primary[4].hexString(),
-            onSecondary: Primary[9].hexString(),
-            secondaryContainer: Primary[9].hexString(),
-            onSecondaryContainer: Primary[2].hexString(),
+            secondary: Primary["T-40"],
+            onSecondary: Primary["T-100"],
+            secondaryContainer: Primary["T-90"],
+            onSecondaryContainer: Primary["T-10"],
 
-            tertiary: Primary[4].hexString(),
-            onTertiary: Primary[4].hexString(),
-            tertiaryContainer: Primary[4].hexString(),
-            onTertiaryContainer: Primary[4].hexString(),
+            tertiary: Primary["T-40"],
+            onTertiary: Primary["T-40"],
+            tertiaryContainer: Primary["T-40"],
+            onTertiaryContainer: Primary["T-40"],
 
-            background: Color(Primary[9].hexString()).lighten(0.16).toString(),//Neutral99
-            onBackground: Primary[1].hexString(),//Neutral10
-            surface: Color(Primary[9].hexString()).lighten(0.16).toString(),//Neutral99
-            onSurface: Primary[1].hexString(),//Neutral10
+            background: Primary["T-99"],
+            onBackground: Primary["T-10"],
+            surface: Primary["T-99"],
+            onSurface: Primary["T-10"],
 
-            surfaceVariant: Color(Primary[9].hexString()).fade(.8).toString(),//Neutral90
-            onSurfaceVariant: Primary[2].hexString(),//Neutral10
-            outline: Color(Primary[2].hexString()).fade(.6).toString(),//Neutral90
+            surfaceVariant: Primary["T-99"],
+            onSurfaceVariant: Primary["T-30"],
+            outline: Primary["T-50"],
 
             elevation: {
                 level0: 'transparent',
@@ -62,36 +62,36 @@ const getColors = ({ colors, Primary, light }: { colors: colors, Primary: Array<
             },
 
             //navigator
-            card: Color(Primary[9].hexString()).lighten(0.12).toString(),
-            text: Primary[1].hexString(),
-            border: Primary[2].hexString(),
-            notification: Primary[2].hexString(),
+            card: Primary["T-99"],
+            text: Primary["T-10"],
+            border: Primary["T-20"],
+            notification: Primary["T-20"],
         }
         : {
             ...colors,
-            primary: Primary[8].hexString(),
-            onPrimary: Primary[2].hexString(),
-            primaryContainer: Primary[3].hexString(),
-            onPrimaryContainer: Primary[9].hexString(),
+            primary: Primary["T-80"],
+            onPrimary: Primary["T-20"],
+            primaryContainer: Primary["T-30"],
+            onPrimaryContainer: Primary["T-90"],
 
-            secondary: Primary[4].hexString(),
-            onSecondary: Primary[9].hexString(),
-            secondaryContainer: Primary[9].hexString(),
-            onSecondaryContainer: Primary[2].hexString(),
+            secondary: Primary["T-90"],
+            onSecondary: Primary["T-30"],
+            secondaryContainer: Primary["T-40"],
+            onSecondaryContainer: Primary["T-95"],
 
-            tertiary: Primary[9].hexString(),
-            onTertiary: Primary[9].hexString(),
-            tertiaryContainer: Primary[9].hexString(),
-            onTertiaryContainer: Primary[9].hexString(),
+            tertiary: Primary["T-90"],
+            onTertiary: Primary["T-90"],
+            tertiaryContainer: Primary["T-90"],
+            onTertiaryContainer: Primary["T-90"],
 
-            background: Color(Primary[1].hexString()).lighten(0.16).toString(),//Neutral99
-            onBackground: Primary[9].hexString(),//Neutral10
-            surface: Color(Primary[1].hexString()).lighten(0.16).toString(),//Neutral99
-            onSurface: Primary[9].hexString(),//Neutral10
+            background: Primary["T-0"],
+            onBackground: Primary["T-90"],
+            surface: Primary["T-90"],
+            onSurface: Primary["T-95"],
 
-            surfaceVariant: Color(Primary[1].hexString()).fade(.8).toString(),//Neutral90
-            onSurfaceVariant: Primary[9].hexString(),//Neutral10
-            outline: Color(Primary[9].hexString()).fade(.6).toString(),//Neutral90
+            surfaceVariant: Primary["T-30"],
+            onSurfaceVariant: Primary["T-95"],
+            outline: Primary["T-90"],
 
             elevation: {
                 level0: 'transparent',
@@ -103,10 +103,10 @@ const getColors = ({ colors, Primary, light }: { colors: colors, Primary: Array<
             },
 
             //navigator
-            card: Color(Primary[1].hexString()).lighten(0.12).toString(),
-            text: Primary[9].hexString(),
-            border: Primary[8].hexString(),
-            notification: Primary[8].hexString(),
+            card: Primary["T-10"],
+            text: Primary["T-95"],
+            border: Primary["T-60"],
+            notification: Primary["T-80"],
         }
 }
 
@@ -128,7 +128,9 @@ const themeSlice = createSlice({
             state.whithSystem = action.payload;
         },
         updatePrimaryColor: (state, action: PayloadAction<string | undefined>) => {
-            state.Primary = new Values(action.payload ?? prelmoColor).all(20).reverse();
+            // state.Primary = new Values(action.payload ?? prelmoColor).all(20).reverse();
+            state.Primary = getMD3(action.payload ?? prelmoColor).tonals;
+
 
             if (state.theme.dark) {
                 state.theme = { ...state.theme, colors: getColors({ colors: state.theme.colors, light: false, Primary: state.Primary }) }
