@@ -18,8 +18,9 @@ import { Appbar, IconButton, Searchbar, Text } from 'react-native-paper';
 import { IconMenu } from '../components/IconMenu';
 import { Orientation } from '../types/types';
 import { BatteryStatus } from '../types/types';
-import Animated, { LightSpeedInLeft, LightSpeedInRight, LightSpeedOutRight, SlideInRight, SlideOutRight } from 'react-native-reanimated';
+import Animated, { LightSpeedInLeft, LightSpeedInRight, SlideInRight, SlideOutRight } from 'react-native-reanimated';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props extends NativeStackScreenProps<RootStackParamList, 'ResultAccountsScreen'> { };
 
@@ -47,6 +48,8 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
 
     const [textQueryValue, setTextQueryValue] = useState<string>('');
     const debaucedValue = useDebouncedValue(textQueryValue, 300);
+
+    const insets = useSafeAreaInsets();
 
     const Download = async ({ mime, withGrap, name }: { withGrap?: boolean, mime: MIMETypes, name?: string }) => {
         let reportDownload: TypeReportDownload, fileName: string = '';
@@ -97,81 +100,80 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            title:
-                (report === 'ap-ci')
-                    ? 'Apertura y cierre'
-                    : (report === 'event-alarm')
-                        ? 'Evento de alarma'
-                        : (report === 'batery')
-                            ? `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Problemas de batería`
-                            : (report === 'state')
-                                ? `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Estado de sucursales`
-                                : `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Horario de aperturas y cierres`
-            ,
-            headerLeft: (() =>
-                isDownloadDoc
-                    ?
-                    <ActivityIndicator
-                        style={{ paddingRight: 10 }}
-                        color={colors.primary}
+            header: ((props) =>
+                <Appbar
+                    style={[Platform.OS === 'ios' && { height: insets.top - insets.bottom }]}
+                    safeAreaInsets={insets}
+                >
+                    <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                    <Appbar.Content
+                        style={[
+                            Platform.OS === 'ios' && orientation === Orientation.portrait && {
+                                height: insets.top,
+                                justifyContent: 'center',
+                            },
+                        ]}
+                        title={
+                            (report === 'ap-ci')
+                                ? 'Apertura y cierre'
+                                : (report === 'event-alarm')
+                                    ? 'Evento de alarma'
+                                    : (report === 'batery')
+                                        ? `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Problemas de batería`
+                                        : (report === 'state')
+                                            ? `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Estado de sucursales`
+                                            : `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Horario de aperturas y cierres`
+                        }
                     />
-                    :
-                    <IconButton
-                        style={{ paddingRight: 10 }}
-                        icon={Platform.OS === 'ios' ? 'chevron-left' : 'arrow-left'}
-                        onPress={() => {
-                            queryClient.removeQueries({ queryKey: keyQuery })
-                            navigation.goBack();
-                        }}
-                    />
-            ),
-            headerRight: (() =>
-                <IconMenu
-                    ref={refModal}
-                    disabled={isLoading || isFetching || isDownloadDoc}
-                    menu={[
-                        {
-                            children: 'Descargar pdf con gráfica',
-                            icon: 'download',
-                            onPress: () => {
-                                Download({ mime: MIMETypes.pdf, withGrap: true, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
-                            },
-                            contentStyle: { ...styles.btnMenu }
-                        },
-                        {
-                            children: 'Descargar pdf',
-                            icon: 'download',
-                            onPress: () => {
-                                Download({ mime: MIMETypes.pdf, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
-                            },
-                            contentStyle: { ...styles.btnMenu }
-                        },
-                        {
-                            children: 'Descargar excel',
-                            icon: 'download',
-                            onPress: () => {
-                                Download({ mime: MIMETypes.xlsx, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
-                            },
-                            contentStyle: { ...styles.btnMenu }
-                        },
-                        {
-                            children: 'Descargas',
-                            icon: 'cloud-download',
-                            onPress: () => { navigation.navigate('DownloadScreen') },
-                            contentStyle: { ...styles.btnMenu }
-                        },
-                        {
-                            children: 'Recargar',
-                            icon: 'refresh',
-                            onPress: () => refetch(),
-                            contentStyle: { ...styles.btnMenu }
-                        },
-                    ]}
-                />
-            ),
-            headerLargeTitle: true,
+                    <View style={[
+                        Platform.OS === 'ios' && orientation === Orientation.portrait && { width: 60, height: insets.top, justifyContent: 'center' }
+                    ]}>
+                        <IconMenu
+                            ref={refModal}
+                            disabled={isLoading || isFetching || isDownloadDoc}
+                            menu={[
+                                {
+                                    children: 'Descargar pdf con gráfica',
+                                    icon: 'download',
+                                    onPress: () => {
+                                        Download({ mime: MIMETypes.pdf, withGrap: true, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
+                                    },
+                                    contentStyle: { ...styles.btnMenu }
+                                },
+                                {
+                                    children: 'Descargar pdf',
+                                    icon: 'download',
+                                    onPress: () => {
+                                        Download({ mime: MIMETypes.pdf, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
+                                    },
+                                    contentStyle: { ...styles.btnMenu }
+                                },
+                                {
+                                    children: 'Descargar excel',
+                                    icon: 'download',
+                                    onPress: () => {
+                                        Download({ mime: MIMETypes.xlsx, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
+                                    },
+                                    contentStyle: { ...styles.btnMenu }
+                                },
+                                {
+                                    children: 'Descargas',
+                                    icon: 'cloud-download',
+                                    onPress: () => { navigation.navigate('DownloadScreen') },
+                                    contentStyle: { ...styles.btnMenu }
+                                },
+                                {
+                                    children: 'Recargar',
+                                    icon: 'refresh',
+                                    onPress: () => refetch(),
+                                    contentStyle: { ...styles.btnMenu }
+                                },
+                            ]} />
+                    </View>
+                </Appbar>
+            )
         });
-    }, [navigation, isLoading, isFetching, data, isDownloadDoc, orientation]);
+    }, [navigation, isLoading, isFetching, data, isDownloadDoc, orientation, insets, colors]);
 
     useEffect(() => {
         setFilterData(data);
@@ -466,15 +468,15 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
     }, [filterData, colors, fonts, dark, navigation, dates]);
 
     return (
-        <>
+        <SafeAreaView style={{ flex: 1 }}>
             <Text
                 style={[
-                    { borderLeftWidth: 3, borderColor: colors.primary, color: colors.text, marginVertical: 10 },
+                    { marginVertical: 10 },
                     fonts.titleMedium,
                     orientation === Orientation.landscape && { display: 'none' }
                 ]}
-            >  {(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}</Text>
-            <Loading refresh={isLoading || isFetching} />
+            > <View style={{ width: 3, height: Platform.OS === 'ios' ? 17 : 10, backgroundColor: colors.primary }} /> {(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}</Text>
+            <Loading loading={isLoading} refresh={isFetching} />
             {_renderPercentajes()}
             {
                 (report === 'batery' || report === 'state')
@@ -564,8 +566,7 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
                     : _renderTables(report)
 
             }
-            <Loading loading={isLoading} refresh={isFetching} />
-        </>
+        </SafeAreaView>
     )
 }
 

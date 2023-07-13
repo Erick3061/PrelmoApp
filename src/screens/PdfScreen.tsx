@@ -1,13 +1,14 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { Platform, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import Pdf from 'react-native-pdf';
 import { RootStackParamList } from '../types/types';
 import { Loading } from '../components/Loading';
-import { Appbar, Button, Text } from 'react-native-paper';
+import { Appbar, Button, FAB, Text } from 'react-native-paper';
 import { useAppSelector } from '../app/hooks';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Share from 'react-native-share';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PdfScreen'>;
@@ -62,6 +63,26 @@ export const PdfScreen = ({ navigation, route: { params: { name, url } } }: Prop
                     trustAllCerts={false}
                 />
             }
+            <FAB
+                icon="share-variant"
+                style={styles.fab}
+                onPress={async () => {
+                    try {
+                        await Share.open({
+                            url: source.uri
+                        })
+                    } catch (error) { }
+                }}
+            />
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        bottom: 0,
+    },
+})

@@ -7,7 +7,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Alarm, AP, APCI, Bat, CI, filterEvents, MIMETypes, Orientation, otros, Prue, RootStackParamList } from '../types/types';
 import { RefreshControl } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { ActivityIndicator } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
 import { RequestContext } from '../context/RequestContext';
@@ -57,22 +56,6 @@ export const ResultAccountScreen = ({ navigation, route: { params: { account, en
     useLayoutEffect(() => {
         navigation.setOptions({
             title: isDownloadDoc ? 'Descargando documento...' : `${orientation === Orientation.landscape ? `${account.Nombre}  ` : ''} ${(report === 'ap-ci') ? 'Apertura y cierre' : 'Evento de alrma'}`,
-            headerLeft: (() =>
-                isDownloadDoc
-                    ?
-                    <ActivityIndicator
-                        style={{ paddingRight: 10 }}
-                        color={colors.primary}
-                    />
-                    :
-                    <IconButton
-                        style={{ paddingRight: 10 }}
-                        icon={Platform.OS === 'ios' ? 'chevron-left' : 'arrow-left'}
-                        onPress={() => {
-                            navigation.goBack();
-                        }}
-                    />
-            ),
             headerRight: (() =>
                 <IconMenu
                     ref={refModal}
@@ -134,27 +117,25 @@ export const ResultAccountScreen = ({ navigation, route: { params: { account, en
     const renderItem = useCallback(({ index, item, separators }: ListRenderItemInfo<Events>) => (
         view === 'default'
             ?
-            <Animated.View entering={FadeIn} style={[styles.item, { borderRadius: roundness, backgroundColor: colors.background, shadowColor: colors.primary, alignSelf: 'center', width: orientation === Orientation.landscape ? screenWidth + 100 : ((screenWidth / 100) * 95), height: 90, }]}>
+            <Animated.View entering={FadeIn} style={[styles.item, { borderRadius: roundness * 2, backgroundColor: colors.card, shadowColor: colors.primary, alignSelf: 'center', width: orientation === Orientation.landscape ? screenWidth + 100 : ((screenWidth / 100) * 95), height: 90, }]}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View>
-                        <Text variant='titleMedium'>{item.DescripcionEvent}</Text>
-                        <Text>Particón: {item.Particion}</Text>
+                        <Text variant='titleSmall'>{item.DescripcionEvent}</Text>
+                        <Text variant='labelSmall'>Particón: {item.Particion}</Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <View >
-                            <Text variant='labelMedium'>{item.FechaOriginal} {item.Hora}</Text>
+                            <Text variant='labelSmall'>{item.FechaOriginal} {item.Hora}</Text>
                         </View>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
-                    <Text adjustsFontSizeToFit numberOfLines={1} style={{ flex: 1 }} variant='labelMedium'>{`${item.DescripcionZona} ${item.NombreUsuario}`.split('').length <= 1 ? 'Sistema / Llavero' : `${item.DescripcionZona} ${item.NombreUsuario}`}</Text>
-                    <Text variant='labelMedium'># {item.CodigoUsuario} {item.CodigoZona}</Text>
+                    <Text adjustsFontSizeToFit numberOfLines={1} style={{ flex: 1 }} variant='labelSmall'>{`${item.DescripcionZona} ${item.NombreUsuario}`.split('').length <= 1 ? 'Sistema / Llavero' : `${item.DescripcionZona} ${item.NombreUsuario}`}</Text>
+                    <Text variant='labelSmall'># {item.CodigoUsuario} {item.CodigoZona}</Text>
                 </View>
             </Animated.View>
             :
-            <DataTable.Row style={[
-                (index % 2 === 0) && { backgroundColor: Color(dark ? colors.onSurface : colors.primary).fade(.98).toString() }
-            ]}>
+            <DataTable.Row style={[(index % 2 === 0) && { backgroundColor: dark ? colors.card : colors.onPrimary }]}>
                 {
                     keys.map((key) =>
                         <DataTable.Cell
@@ -339,11 +320,8 @@ export const ResultAccountScreen = ({ navigation, route: { params: { account, en
     return (
         <>
             <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
-                <Text variant='titleMedium' style={[
-                    { marginBottom: 5 },
-                    orientation === Orientation.landscape && { display: 'none' }
-                ]}>{account.Nombre}</Text>
-                <Text variant='titleSmall' style={[{ borderLeftWidth: 3, borderColor: colors.primary }]}>  Entre las fechas {start} a {end}</Text>
+                <Text variant='titleSmall'><View style={{ width: 3, height: Platform.OS === 'ios' ? 13 : 11, backgroundColor: colors.primary }} /> {account.Nombre}</Text>
+                <Text variant='labelSmall' ><View style={{ width: 3, height: 10, backgroundColor: colors.primary }} /> Entre las fechas {start} a {end}</Text>
             </View>
             {
                 (!filter)

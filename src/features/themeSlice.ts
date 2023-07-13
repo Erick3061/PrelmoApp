@@ -86,7 +86,7 @@ const getColors = ({ colors, Primary, light }: { colors: colors, Primary: TonalP
 
             background: Primary["T-0"],
             onBackground: Primary["T-90"],
-            surface: Primary["T-90"],
+            surface: Primary["T-10"],
             onSurface: Primary["T-95"],
 
             surfaceVariant: Primary["T-30"],

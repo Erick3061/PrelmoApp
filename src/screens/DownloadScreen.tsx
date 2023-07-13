@@ -1,24 +1,31 @@
 import React, { useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { FlatList, Image, ListRenderItemInfo, Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import { Alert, FlatList, Image, ListRenderItemInfo, Platform, Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { Loading } from '../components/Loading';
-import Color from 'color';
 import RNFS from 'react-native-fs';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
-import { MIMETypes, RootDrawerParamList } from '../types/types';
+import { MIMETypes, RootDrawerParamList, RootStackParamList } from '../types/types';
 import Share from 'react-native-share';
 import { Button, IconButton, Portal, Text } from 'react-native-paper';
 import { useAppSelector } from '../app/hooks';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
 import { IconMenu } from '../components/IconMenu';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import Open from 'react-native-file-viewer';
 
 
 interface Props extends DrawerScreenProps<RootDrawerParamList, 'DownloadScreen'> { }
+type Screen = NativeStackNavigationProp<RootStackParamList, 'Drawer'>;
 
 export const DownloadScreen = ({ navigation }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [selected, setSelected] = useState<RNFS.ReadDirItem>();
     const [files, setFiles] = useState<Array<RNFS.ReadDirItem>>();
+    const focused = useIsFocused();
+    const stack = useNavigation<Screen>();
+
 
     const {
         theme: { theme: { colors, roundness } },
@@ -52,7 +59,14 @@ export const DownloadScreen = ({ navigation }: Props) => {
                 await Share.open({
                     url: base64Data
                 })
-            } catch (error) { notification({ type: 'info', title: 'Información', text: `${error}` }) }
+            } catch (error) {
+                // notification({ type: 'info', title: 'Información', text: `${error}` })
+                if (Platform.OS === 'android') {
+                    RNFS
+                } else {
+
+                }
+            }
         }
     }, [selected]);
 
@@ -73,7 +87,24 @@ export const DownloadScreen = ({ navigation }: Props) => {
             <Pressable
                 style={{ marginVertical: 5, flexDirection: 'row', width: '100%', height: 50, alignItems: 'center' }}
                 android_ripple={{ color: colors.elevation.level2 }}
-                onPress={() => item.isFile() && setSelected(item)}
+                onLongPress={() => item.isFile() && setSelected(item)}
+                onPress={async () => {
+                    if (item.isFile()) {
+                        const mime: MIMETypes = (item.name.includes('.pdf')) ? MIMETypes.pdf : (item.name.includes('.xlsx')) ? MIMETypes.xlsx : MIMETypes.desc;
+                        if (mime === MIMETypes.desc) { Alert.alert('Error', 'formato de archivo no se puede abrir') };
+                        let base64Data = await RNFS.readFile(item.path, 'base64');
+                        base64Data = `data:${mime};base64,` + base64Data;
+                        if (mime === MIMETypes.pdf) {
+                            stack.navigate('PdfScreen', { url: base64Data, name: item.name });
+                        } else {
+                            try {
+                                await Open.open(base64Data);
+                            } catch (error) {
+
+                            }
+                        }
+                    }
+                }}
             >
                 <IconButton icon={item.isFile() ? icon : 'folder'} size={45} iconColor={color} style={{ padding: 0, margin: 0 }} />
                 <View style={{ justifyContent: 'center', flex: 1, marginRight: 15 }}>
@@ -92,6 +123,14 @@ export const DownloadScreen = ({ navigation }: Props) => {
                     <View style={{ marginHorizontal: 10 }}>
                         <IconMenu
                             menu={[
+                                {
+                                    children: 'Ver directorio',
+                                    icon: 'folder',
+                                    onPress() {
+                                        Alert.alert('Directorio', directory);
+                                    },
+                                    contentStyle: { justifyContent: 'space-between' }
+                                },
                                 {
                                     children: 'Actualizar',
                                     icon: 'refresh',
@@ -113,13 +152,13 @@ export const DownloadScreen = ({ navigation }: Props) => {
     }, [focus]);
 
     useEffect(() => {
-        Read();
-    }, []);
+        focused && Read();
+    }, [focused]);
 
     return (
         <View style={{ flex: 1, padding: 5 }}>
             <Loading refresh={isLoading} />
-            <Text variant='labelMedium'>{directory}</Text>
+            {/* <Text variant='labelMedium'>{directory}</Text> */}
             <FlatList
                 data={files}
                 ItemSeparatorComponent={() => <View style={[{ backgroundColor: colors.border, height: StyleSheet.hairlineWidth, }]} />}

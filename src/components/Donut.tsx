@@ -102,7 +102,7 @@ export default function Donut({ percentage, radius = 35, strokeWidth = 5, durati
                 editable={false}
                 style={[
                     StyleSheet.absoluteFillObject,
-                    { fontSize: Platform.OS === 'ios' ? radius / 3.5 : radius / 3, color: textColor ?? color, opacity: 1 },
+                    { fontSize: Platform.OS === 'ios' ? radius / 3.5 : radius / 3, color: textColor ?? color },
                     styles.text,
                 ]}
             />
