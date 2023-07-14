@@ -45,13 +45,14 @@ export const DownloadScreen = ({ navigation }: Props) => {
         }
     }
 
-    const share = useCallback(async () => {
-        if (selected) {
+    const share = useCallback(async (item?: RNFS.ReadDirItem) => {
+        const select = selected ?? item!;
+        if (select) {
             try {
-                const mime: MIMETypes = (selected.name.includes('.pdf')) ? MIMETypes.pdf : (selected.name.includes('.xlsx')) ? MIMETypes.xlsx : MIMETypes.desc;
+                const mime: MIMETypes = (select.name.includes('.pdf')) ? MIMETypes.pdf : (select.name.includes('.xlsx')) ? MIMETypes.xlsx : MIMETypes.desc;
                 if (mime === MIMETypes.desc) { throw 'Error, formato de archivo no se puedo compartir' };
 
-                let base64Data = await RNFS.readFile(selected.path, 'base64');
+                let base64Data = await RNFS.readFile(select.path, 'base64');
                 base64Data = `data:${mime};base64,` + base64Data;
                 await Share.open({
                     url: base64Data
@@ -78,7 +79,7 @@ export const DownloadScreen = ({ navigation }: Props) => {
                     await RNFS.unlink(item.path);
                     Read();
                 }} />}
-                {<IconButton disabled={!item.isFile()} icon={'share-variant'} />}
+                {<IconButton disabled={!item.isFile()} icon={'share-variant'} onPress={() => share(item)} />}
             </NativeAnimated.View>
         );
     };
@@ -204,7 +205,7 @@ export const DownloadScreen = ({ navigation }: Props) => {
                                 style={[styles.btnMenu]}
                                 children={'Compartir'}
                                 icon={'share-variant'}
-                                onPress={share}
+                                onPress={() => share()}
                             />
                         </Animated.View>
                     </View>
