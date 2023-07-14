@@ -4,11 +4,10 @@ import { Platform, StyleSheet, View } from 'react-native';
 import Pdf from 'react-native-pdf';
 import { RootStackParamList } from '../types/types';
 import { Loading } from '../components/Loading';
-import { Appbar, Button, FAB, Text } from 'react-native-paper';
+import { Appbar, Button, Text } from 'react-native-paper';
 import { useAppSelector } from '../app/hooks';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Share from 'react-native-share';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PdfScreen'>;
@@ -63,7 +62,7 @@ export const PdfScreen = ({ navigation, route: { params: { name, url } } }: Prop
                     trustAllCerts={false}
                 />
             }
-            <FAB
+            {/* <FAB
                 icon="share-variant"
                 style={styles.fab}
                 onPress={async () => {
@@ -73,7 +72,7 @@ export const PdfScreen = ({ navigation, route: { params: { name, url } } }: Prop
                         })
                     } catch (error) { }
                 }}
-            />
+            /> */}
         </View>
     )
 }

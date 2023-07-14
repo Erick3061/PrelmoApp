@@ -11,9 +11,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		21667183E976DCA922B252DD /* libPods-prelmo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D53F54D011FA25BC1749AFBF /* libPods-prelmo.a */; };
+		6DEF7B0F29FCA94FE2512E76 /* libPods-prelmo-prelmoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C9B70771F627AEFCC70F72B /* libPods-prelmo-prelmoTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		9076377278E817D0690F0BBD /* libPods-prelmo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CC10DF0F93E80037D1E4A5B /* libPods-prelmo.a */; };
-		A2E78055CA3A9A6E94463924 /* libPods-prelmo-prelmoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E32EF2B155B62EA14CB83F01 /* libPods-prelmo-prelmoTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,7 +27,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		009C1F367F781AF545749973 /* Pods-prelmo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-prelmo.debug.xcconfig"; path = "Target Support Files/Pods-prelmo/Pods-prelmo.debug.xcconfig"; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* prelmoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = prelmoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* prelmoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = prelmoTests.m; sourceTree = "<group>"; };
@@ -37,14 +36,15 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = prelmo/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = prelmo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = prelmo/main.m; sourceTree = "<group>"; };
+		39319AAD3D47522CE9AF8272 /* Pods-prelmo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-prelmo.debug.xcconfig"; path = "Target Support Files/Pods-prelmo/Pods-prelmo.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = prelmo/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8CC10DF0F93E80037D1E4A5B /* libPods-prelmo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-prelmo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9247C12A260EF67FB16E27CB /* Pods-prelmo-prelmoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-prelmo-prelmoTests.release.xcconfig"; path = "Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests.release.xcconfig"; sourceTree = "<group>"; };
-		984D3B19B006B1762C03E737 /* Pods-prelmo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-prelmo.release.xcconfig"; path = "Target Support Files/Pods-prelmo/Pods-prelmo.release.xcconfig"; sourceTree = "<group>"; };
+		8C9B70771F627AEFCC70F72B /* libPods-prelmo-prelmoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-prelmo-prelmoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB3B1E1A4AFDFF8FC1796B0E /* Pods-prelmo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-prelmo.release.xcconfig"; path = "Target Support Files/Pods-prelmo/Pods-prelmo.release.xcconfig"; sourceTree = "<group>"; };
+		D53F54D011FA25BC1749AFBF /* libPods-prelmo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-prelmo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9CD76BE3F7C24C9ABF624A5 /* Pods-prelmo-prelmoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-prelmo-prelmoTests.debug.xcconfig"; path = "Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E264BCD22A5F0D8A0050B76E /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
-		E32EF2B155B62EA14CB83F01 /* libPods-prelmo-prelmoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-prelmo-prelmoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E50576930996575802077D90 /* Pods-prelmo-prelmoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-prelmo-prelmoTests.debug.xcconfig"; path = "Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F261ABCFF1049DF19D2C340F /* Pods-prelmo-prelmoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-prelmo-prelmoTests.release.xcconfig"; path = "Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2E78055CA3A9A6E94463924 /* libPods-prelmo-prelmoTests.a in Frameworks */,
+				6DEF7B0F29FCA94FE2512E76 /* libPods-prelmo-prelmoTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,7 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9076377278E817D0690F0BBD /* libPods-prelmo.a in Frameworks */,
+				21667183E976DCA922B252DD /* libPods-prelmo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,8 +101,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				8CC10DF0F93E80037D1E4A5B /* libPods-prelmo.a */,
-				E32EF2B155B62EA14CB83F01 /* libPods-prelmo-prelmoTests.a */,
+				D53F54D011FA25BC1749AFBF /* libPods-prelmo.a */,
+				8C9B70771F627AEFCC70F72B /* libPods-prelmo-prelmoTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -142,10 +142,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				009C1F367F781AF545749973 /* Pods-prelmo.debug.xcconfig */,
-				984D3B19B006B1762C03E737 /* Pods-prelmo.release.xcconfig */,
-				E50576930996575802077D90 /* Pods-prelmo-prelmoTests.debug.xcconfig */,
-				9247C12A260EF67FB16E27CB /* Pods-prelmo-prelmoTests.release.xcconfig */,
+				39319AAD3D47522CE9AF8272 /* Pods-prelmo.debug.xcconfig */,
+				AB3B1E1A4AFDFF8FC1796B0E /* Pods-prelmo.release.xcconfig */,
+				D9CD76BE3F7C24C9ABF624A5 /* Pods-prelmo-prelmoTests.debug.xcconfig */,
+				F261ABCFF1049DF19D2C340F /* Pods-prelmo-prelmoTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -165,12 +165,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "prelmoTests" */;
 			buildPhases = (
-				D891D1DB5DEF50C6FD340869 /* [CP] Check Pods Manifest.lock */,
+				F90B5CF084D8D057A738952E /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				F75A3936FBD7B64F03358616 /* [CP] Embed Pods Frameworks */,
-				E01427395247E219D1ED9509 /* [CP] Copy Pods Resources */,
+				97E07245A34CCF96BB45FA97 /* [CP] Embed Pods Frameworks */,
+				0698283B1F99FF19330C55B3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -186,14 +186,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "prelmo" */;
 			buildPhases = (
-				A4A1A77FE96B172E658A45EA /* [CP] Check Pods Manifest.lock */,
+				357D0A19AA9FACC28C7F5A48 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				45A029AEAA8E163DD6E2AA94 /* [CP] Embed Pods Frameworks */,
-				94E82C8D1EFE91B2E5439685 /* [CP] Copy Pods Resources */,
+				8C99F367A3C2C017AE58D241 /* [CP] Embed Pods Frameworks */,
+				DD2861EFBDC6AF962C76E921 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -276,41 +276,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		45A029AEAA8E163DD6E2AA94 /* [CP] Embed Pods Frameworks */ = {
+		0698283B1F99FF19330C55B3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		94E82C8D1EFE91B2E5439685 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A4A1A77FE96B172E658A45EA /* [CP] Check Pods Manifest.lock */ = {
+		357D0A19AA9FACC28C7F5A48 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -332,7 +315,58 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D891D1DB5DEF50C6FD340869 /* [CP] Check Pods Manifest.lock */ = {
+		8C99F367A3C2C017AE58D241 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		97E07245A34CCF96BB45FA97 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DD2861EFBDC6AF962C76E921 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-prelmo/Pods-prelmo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F90B5CF084D8D057A738952E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -352,40 +386,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E01427395247E219D1ED9509 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F75A3936FBD7B64F03358616 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-prelmo-prelmoTests/Pods-prelmo-prelmoTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -440,7 +440,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E50576930996575802077D90 /* Pods-prelmo-prelmoTests.debug.xcconfig */;
+			baseConfigurationReference = D9CD76BE3F7C24C9ABF624A5 /* Pods-prelmo-prelmoTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -467,7 +467,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9247C12A260EF67FB16E27CB /* Pods-prelmo-prelmoTests.release.xcconfig */;
+			baseConfigurationReference = F261ABCFF1049DF19D2C340F /* Pods-prelmo-prelmoTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -491,7 +491,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 009C1F367F781AF545749973 /* Pods-prelmo.debug.xcconfig */;
+			baseConfigurationReference = 39319AAD3D47522CE9AF8272 /* Pods-prelmo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -518,7 +518,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 984D3B19B006B1762C03E737 /* Pods-prelmo.release.xcconfig */;
+			baseConfigurationReference = AB3B1E1A4AFDFF8FC1796B0E /* Pods-prelmo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

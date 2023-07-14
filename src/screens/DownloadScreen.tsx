@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { Alert, FlatList, Image, ListRenderItemInfo, Platform, Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import React, { Suspense, useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { Alert, FlatList, ListRenderItemInfo, Pressable, RefreshControl, StyleSheet, View, Animated as NativeAnimated } from 'react-native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { Loading } from '../components/Loading';
 import RNFS from 'react-native-fs';
@@ -10,21 +10,18 @@ import { Button, IconButton, Portal, Text } from 'react-native-paper';
 import { useAppSelector } from '../app/hooks';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
 import { IconMenu } from '../components/IconMenu';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-import Open from 'react-native-file-viewer';
+import { useIsFocused } from '@react-navigation/native';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import FileViewer from "react-native-file-viewer";
 
 
 interface Props extends DrawerScreenProps<RootDrawerParamList, 'DownloadScreen'> { }
-type Screen = NativeStackNavigationProp<RootStackParamList, 'Drawer'>;
 
 export const DownloadScreen = ({ navigation }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [selected, setSelected] = useState<RNFS.ReadDirItem>();
     const [files, setFiles] = useState<Array<RNFS.ReadDirItem>>();
     const focused = useIsFocused();
-    const stack = useNavigation<Screen>();
 
 
     const {
@@ -61,14 +58,30 @@ export const DownloadScreen = ({ navigation }: Props) => {
                 })
             } catch (error) {
                 // notification({ type: 'info', title: 'Información', text: `${error}` })
-                if (Platform.OS === 'android') {
-                    RNFS
-                } else {
-
-                }
             }
         }
     }, [selected]);
+
+    const renderLeftActions = (
+        _progress: NativeAnimated.AnimatedInterpolation<number>,
+        dragX: NativeAnimated.AnimatedInterpolation<number>,
+        item: RNFS.ReadDirItem
+    ) => {
+        const scale = dragX.interpolate({
+            inputRange: [-80, 0],
+            outputRange: [1, 0],
+            extrapolate: 'clamp',
+        });
+        return (
+            <NativeAnimated.View style={{ flexDirection: 'row', transform: [{ scale }] }}>
+                {<IconButton icon={'delete'} iconColor={colors.error} onPress={async () => {
+                    await RNFS.unlink(item.path);
+                    Read();
+                }} />}
+                {<IconButton disabled={!item.isFile()} icon={'share-variant'} />}
+            </NativeAnimated.View>
+        );
+    };
 
 
     const Item = ({ item }: ListRenderItemInfo<RNFS.ReadDirItem>) => {
@@ -84,34 +97,32 @@ export const DownloadScreen = ({ navigation }: Props) => {
         };
 
         return (
-            <Pressable
-                style={{ marginVertical: 5, flexDirection: 'row', width: '100%', height: 50, alignItems: 'center' }}
-                android_ripple={{ color: colors.elevation.level2 }}
-                onLongPress={() => item.isFile() && setSelected(item)}
-                onPress={async () => {
-                    if (item.isFile()) {
-                        const mime: MIMETypes = (item.name.includes('.pdf')) ? MIMETypes.pdf : (item.name.includes('.xlsx')) ? MIMETypes.xlsx : MIMETypes.desc;
-                        if (mime === MIMETypes.desc) { Alert.alert('Error', 'formato de archivo no se puede abrir') };
-                        let base64Data = await RNFS.readFile(item.path, 'base64');
-                        base64Data = `data:${mime};base64,` + base64Data;
-                        if (mime === MIMETypes.pdf) {
-                            stack.navigate('PdfScreen', { url: base64Data, name: item.name });
-                        } else {
-                            try {
-                                await Open.open(base64Data);
-                            } catch (error) {
-
-                            }
-                        }
-                    }
-                }}
+            <Swipeable
+                friction={2}
+                leftThreshold={80}
+                enableTrackpadTwoFingerGesture
+                rightThreshold={40}
+                renderRightActions={(progress, drag, swioeable) => renderLeftActions(progress, drag, item)}
             >
-                <IconButton icon={item.isFile() ? icon : 'folder'} size={45} iconColor={color} style={{ padding: 0, margin: 0 }} />
-                <View style={{ justifyContent: 'center', flex: 1, marginRight: 15 }}>
-                    <Text variant='labelMedium' numberOfLines={1}>{item.name}</Text>
-                    <Text variant='labelSmall' numberOfLines={1}>{`${item.mtime}`}</Text>
-                </View>
-            </Pressable>
+                <Pressable
+                    style={{ marginVertical: 5, flexDirection: 'row', width: '100%', height: 50, alignItems: 'center' }}
+                    android_ripple={{ color: colors.elevation.level2 }}
+                    onLongPress={() => item.isFile() && setSelected(item)}
+                    onPress={async () => {
+                        if (item.isFile()) {
+                            const mime: MIMETypes = (item.name.includes('.pdf')) ? MIMETypes.pdf : (item.name.includes('.xlsx')) ? MIMETypes.xlsx : MIMETypes.desc;
+                            if (mime === MIMETypes.desc) { Alert.alert('Error', 'formato de archivo no se puede abrir') };
+                            FileViewer.open(item.path)
+                        }
+                    }}
+                >
+                    <IconButton icon={item.isFile() ? icon : 'folder'} size={45} iconColor={color} style={{ padding: 0, margin: 0 }} />
+                    <View style={{ justifyContent: 'center', flex: 1, marginRight: 15 }}>
+                        <Text variant='labelMedium' numberOfLines={1}>{item.name}</Text>
+                        <Text variant='labelSmall' numberOfLines={1}>{`${item.mtime}`}</Text>
+                    </View>
+                </Pressable>
+            </Swipeable>
         );
     };
 
