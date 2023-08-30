@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { Props } from './SearchScreen';
 import { useAppSelector, useAppDispatch, useGroups, useDebouncedValue } from '../app/hooks';
 import { Loading } from '../components/Loading';
@@ -48,6 +48,12 @@ export const ListGroupScreen = ({ navigation, route: { params: { type } } }: Pro
     return (
         <View style={{ flex: 1 }}>
             <Loading loading={isLoading} />
+            {Platform.OS === 'ios' && <Searchbar
+                style={{ marginVertical: 10, marginHorizontal: 10 }}
+                placeholder="Buscar cuenta"
+                onChangeText={setTextQueryValue}
+                value={textQueryValue}
+            />}
             <ReciclerData
                 data={filter}
                 labelField='Nombre'
@@ -57,12 +63,12 @@ export const ListGroupScreen = ({ navigation, route: { params: { type } } }: Pro
                 selected={groupsSelected}
                 onRefresh={() => refetch()}
             />
-            <Searchbar
+            {Platform.OS === 'android' && <Searchbar
                 style={{ marginVertical: 10, marginHorizontal: 10 }}
                 placeholder="Buscar cuenta"
                 onChangeText={setTextQueryValue}
                 value={textQueryValue}
-            />
+            />}
         </View>
     )
 }

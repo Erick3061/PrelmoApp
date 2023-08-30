@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { Props } from './SearchScreen';
 import { useAppSelector, useAppDispatch, useMyAccounts, useDebouncedValue } from '../app/hooks';
 
@@ -63,9 +63,29 @@ export const ListAccountScreen = ({ navigation, route: { params: { type } } }: P
         }
     }
 
+    const Search = () => (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Searchbar
+                style={{ marginVertical: 10, marginHorizontal: 10, flex: 1 }}
+                placeholder="Buscar cuenta"
+                onChangeText={setTextQueryValue}
+                value={textQueryValue}
+            />
+            {
+                type === 'Accounts' &&
+                <IconButton
+                    style={{ marginRight: 10 }}
+                    icon={'check-circle'}
+                    onPress={() => navigation.goBack()}
+                />
+            }
+        </View>
+    )
+
     return (
         <View style={{ flex: 1 }}>
             <Loading loading={isLoading} />
+            {Platform.OS === 'ios' && Search()}
             <ReciclerData
                 data={type === 'Accounts' ? filter.filter(f => (accountsSelected.find(b => b.CodigoCte === f.CodigoCte)) === undefined) : filter}
                 labelField='Nombre'
@@ -75,22 +95,7 @@ export const ListAccountScreen = ({ navigation, route: { params: { type } } }: P
                 selected={accountsSelected}
                 onRefresh={() => refetch()}
             />
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Searchbar
-                    style={{ marginVertical: 10, marginHorizontal: 10, flex: 1 }}
-                    placeholder="Buscar cuenta"
-                    onChangeText={setTextQueryValue}
-                    value={textQueryValue}
-                />
-                {
-                    type === 'Accounts' &&
-                    <IconButton
-                        style={{ marginRight: 10 }}
-                        icon={'check-circle'}
-                        onPress={() => navigation.goBack()}
-                    />
-                }
-            </View>
+            {Platform.OS === 'android' && Search()}
         </View>
     )
 }

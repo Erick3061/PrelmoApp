@@ -3,7 +3,6 @@ import { AppTheme } from '../types/types';
 import { CombinedDefaultTheme } from "../config/Theming";
 import { RootState } from "../app/store";
 import Values from "values.js";
-import Color from "color";
 import { getMD3 } from "../functions/functions";
 import { TonalPalette } from "../interface/interface";
 

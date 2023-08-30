@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { View, ScrollView, ListRenderItemInfo, StyleSheet, Modal, Platform, Keyboard, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, ScrollView, ListRenderItemInfo, StyleSheet, Modal, Platform, Keyboard, RefreshControl } from 'react-native';
 import { useAppSelector, useDebouncedValue, useReport } from '../app/hooks';
 import { Loading } from '../components/Loading';
 import { AP, CI, MIMETypes, RootStackParamList, TypeReport, TypeReportDownload } from '../types/types';
@@ -8,34 +8,29 @@ import Color from 'color';
 import { Account, percentaje, formatDate } from '../interface/interface';
 import { style } from '../../App';
 import { getDay, modDate } from '../functions/functions';
-import { useQueryClient } from '@tanstack/react-query';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Row } from '../components/table/Row';
 import { ReciclerData } from '../components/ReciclerData';
 import { RequestContext } from '../context/RequestContext';
-import { Appbar, IconButton, Searchbar, Text } from 'react-native-paper';
+import { Appbar, IconButton, Searchbar, Snackbar, Text } from 'react-native-paper';
 import { IconMenu } from '../components/IconMenu';
 import { Orientation } from '../types/types';
 import { BatteryStatus } from '../types/types';
 import Animated, { LightSpeedInLeft, LightSpeedInRight, SlideInRight, SlideOutRight } from 'react-native-reanimated';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props extends NativeStackScreenProps<RootStackParamList, 'ResultAccountsScreen'> { };
 
 const Tab = createBottomTabNavigator();
 
-export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, end, report, start, keys, typeAccount, nameGroup } } }: Props) => {
+export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, end, report, start, keys, typeAccount } } }: Props) => {
     const { theme: { theme: { colors, fonts, roundness, dark } }, config: { orientation } } = useAppSelector(state => state);
 
     const { data, isLoading, isFetching, refetch } =
         useReport({ accounts: [...accounts.map(a => a.code)], dateStart: start, dateEnd: end, type: report, typeAccount, key: JSON.stringify(accounts.map(a => a.code).sort()) });
 
     const [filterData, setFilterData] = useState<typeof data>();
-
-    const queryClient = useQueryClient();
-    const keyQuery = ["Events", "[" + accounts.map(a => a.code).sort() + "]", report, start, end];
     const refModal = useRef<Modal>(null);
     const [isSearch, setIsSearch] = useState<boolean>(false);
 
@@ -49,19 +44,17 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
     const [textQueryValue, setTextQueryValue] = useState<string>('');
     const debaucedValue = useDebouncedValue(textQueryValue, 300);
 
-    const insets = useSafeAreaInsets();
-
     const Download = async ({ mime, withGrap, name }: { withGrap?: boolean, mime: MIMETypes, name?: string }) => {
         let reportDownload: TypeReportDownload, fileName: string = '';
 
         switch (report) {
             case 'ap-ci':
                 reportDownload = 'ap-ci'
-                fileName = `APCI ${start} ${end} ${name} ${new Date().getTime()}`;
+                fileName = `APCI ${new Date().getTime()}`;
                 break;
             case 'event-alarm':
                 reportDownload = 'alarm'
-                fileName = `EA ${start} ${end} ${name} ${new Date().getTime()}`;
+                fileName = `EA ${new Date().getTime()}`;
                 break;
             case 'batery':
                 reportDownload = 'batery'
@@ -97,83 +90,65 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
         }
     }
 
-
     useLayoutEffect(() => {
         navigation.setOptions({
-            header: ((props) =>
-                <Appbar
-                    style={[Platform.OS === 'ios' && { height: insets.top - insets.bottom }]}
-                    safeAreaInsets={insets}
-                >
-                    <Appbar.BackAction onPress={() => props.navigation.goBack()} />
-                    <Appbar.Content
-                        style={[
-                            Platform.OS === 'ios' && orientation === Orientation.portrait && {
-                                height: insets.top,
-                                justifyContent: 'center',
+            title: isDownloadDoc
+                ? 'Descargando documento...'
+                : (report === 'ap-ci')
+                    ? 'Apertura y cierre'
+                    : (report === 'event-alarm')
+                        ? 'Evento de alarma'
+                        : (report === 'batery')
+                            ? `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Problemas de batería`
+                            : (report === 'state')
+                                ? `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Estado de sucursales`
+                                : `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Horario de aperturas y cierres`
+            ,
+            headerRight: (() =>
+                <IconMenu
+                    ref={refModal}
+                    disabled={isLoading || isFetching || isDownloadDoc}
+                    menu={[
+                        {
+                            children: 'Descargar pdf con gráfica',
+                            icon: 'download',
+                            onPress: () => {
+                                Download({ mime: MIMETypes.pdf, withGrap: true, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
                             },
-                        ]}
-                        title={
-                            (report === 'ap-ci')
-                                ? 'Apertura y cierre'
-                                : (report === 'event-alarm')
-                                    ? 'Evento de alarma'
-                                    : (report === 'batery')
-                                        ? `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Problemas de batería`
-                                        : (report === 'state')
-                                            ? `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Estado de sucursales`
-                                            : `${orientation === Orientation.landscape ? `${(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}  ` : ''} Horario de aperturas y cierres`
-                        }
-                    />
-                    <View style={[
-                        Platform.OS === 'ios' && orientation === Orientation.portrait && { width: 60, height: insets.top, justifyContent: 'center' }
-                    ]}>
-                        <IconMenu
-                            ref={refModal}
-                            disabled={isLoading || isFetching || isDownloadDoc}
-                            menu={[
-                                {
-                                    children: 'Descargar pdf con gráfica',
-                                    icon: 'download',
-                                    onPress: () => {
-                                        Download({ mime: MIMETypes.pdf, withGrap: true, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
-                                    },
-                                    contentStyle: { ...styles.btnMenu }
-                                },
-                                {
-                                    children: 'Descargar pdf',
-                                    icon: 'download',
-                                    onPress: () => {
-                                        Download({ mime: MIMETypes.pdf, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
-                                    },
-                                    contentStyle: { ...styles.btnMenu }
-                                },
-                                {
-                                    children: 'Descargar excel',
-                                    icon: 'download',
-                                    onPress: () => {
-                                        Download({ mime: MIMETypes.xlsx, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
-                                    },
-                                    contentStyle: { ...styles.btnMenu }
-                                },
-                                {
-                                    children: 'Descargas',
-                                    icon: 'cloud-download',
-                                    onPress: () => { navigation.navigate('DownloadScreen') },
-                                    contentStyle: { ...styles.btnMenu }
-                                },
-                                {
-                                    children: 'Recargar',
-                                    icon: 'refresh',
-                                    onPress: () => refetch(),
-                                    contentStyle: { ...styles.btnMenu }
-                                },
-                            ]} />
-                    </View>
-                </Appbar>
+                            contentStyle: { ...styles.btnMenu }
+                        },
+                        {
+                            children: 'Descargar pdf',
+                            icon: 'download',
+                            onPress: () => {
+                                Download({ mime: MIMETypes.pdf, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
+                            },
+                            contentStyle: { ...styles.btnMenu }
+                        },
+                        {
+                            children: 'Descargar excel',
+                            icon: 'download',
+                            onPress: () => {
+                                Download({ mime: MIMETypes.xlsx, name: (data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales' })
+                            },
+                            contentStyle: { ...styles.btnMenu }
+                        },
+                        {
+                            children: 'Descargas',
+                            icon: 'cloud-download',
+                            onPress: () => { navigation.navigate('DownloadScreen') },
+                            contentStyle: { ...styles.btnMenu }
+                        },
+                        {
+                            children: 'Recargar',
+                            icon: 'refresh',
+                            onPress: () => refetch(),
+                            contentStyle: { ...styles.btnMenu }
+                        },
+                    ]} />
             )
         });
-    }, [navigation, isLoading, isFetching, data, isDownloadDoc, orientation, insets, colors]);
+    }, [navigation, isLoading, isFetching, isDownloadDoc, orientation]);
 
     useEffect(() => {
         setFilterData(data);
@@ -468,14 +443,16 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
     }, [filterData, colors, fonts, dark, navigation, dates]);
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <Text
                 style={[
                     { marginVertical: 10 },
                     fonts.titleMedium,
                     orientation === Orientation.landscape && { display: 'none' }
                 ]}
-            > <View style={{ width: 3, height: Platform.OS === 'ios' ? 17 : 10, backgroundColor: colors.primary }} /> {(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}</Text>
+            >
+                <View style={{ width: 3, height: Platform.OS === 'ios' ? 17 : 10, backgroundColor: colors.primary }} /> {(data?.nombre) ? data.nombre : 'Grupo personalizado, cuentas individuales'}
+            </Text>
             <Loading loading={isLoading} refresh={isFetching} />
             {_renderPercentajes()}
             {
@@ -566,7 +543,7 @@ export const ResultAccountsScreen = ({ navigation, route: { params: { accounts, 
                     : _renderTables(report)
 
             }
-        </SafeAreaView>
+        </View>
     )
 }
 

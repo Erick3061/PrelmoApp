@@ -30,7 +30,6 @@ import { ResultAccountsScreen } from '../screens/ResultAccountsScreen';
 import { TableScreen } from '../screens/TableScreen';
 import { OrientationLocker, OrientationType } from 'react-native-orientation-locker';
 import { ChangePasswordScreen } from '../screens/ChangePasswordScreen';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();

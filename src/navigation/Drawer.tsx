@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { Platform, StatusBar, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { IconButton, Switch, Text } from 'react-native-paper';
+import { IconButton, Text } from 'react-native-paper';
 import { logOut } from '../features/configSlice';
 import { Drawer as DrawerPapper } from 'react-native-paper';
 import { DrawerActions } from '@react-navigation/native';
@@ -54,13 +54,13 @@ export const Drawer = ({ }: Props) => {
 }
 
 
-const MenuContent = ({ navigation, state, descriptors }: DrawerContentComponentProps) => {
+const MenuContent = ({ navigation, state }: DrawerContentComponentProps) => {
     const { index, routeNames } = state;
     const {
         theme: { theme },
-        config: { User, orientation }
+        config: { User }
     } = useAppSelector(state => state);
-    const { colors, fonts, roundness, dark } = theme;
+    const { colors, dark } = theme;
     const AppDispatch = useAppDispatch();
     const queryClient = useQueryClient();
     const insets = useSafeAreaInsets();
@@ -70,10 +70,7 @@ const MenuContent = ({ navigation, state, descriptors }: DrawerContentComponentP
     }
 
     return (
-        <View style={[
-            { flex: 1 },
-            Platform.OS === 'ios' && orientation === Orientation.portrait && { paddingTop: insets ? insets.top : 0 }
-        ]}>
+        <DrawerContentScrollView>
             <View style={{ padding: 10, paddingLeft: 0 }}>
                 {
                     User &&
@@ -96,74 +93,72 @@ const MenuContent = ({ navigation, state, descriptors }: DrawerContentComponentP
                     </View>
                 }
             </View>
-            <DrawerContentScrollView>
+            <DrawerPapper.Item
+                label='Inicio'
+                icon={'home'}
+                active={(routeNames[index] === 'HomeScreen') && true}
+                onPress={() => navigation.navigate<keyof RootDrawerParamList>("HomeScreen")}
+            />
+            <DrawerPapper.Section title='Consultas'>
                 <DrawerPapper.Item
-                    label='Inicio'
-                    icon={'home'}
-                    active={(routeNames[index] === 'HomeScreen') && true}
-                    onPress={() => navigation.navigate<keyof RootDrawerParamList>("HomeScreen")}
+                    active={routeNames[index] === 'SelectAccountScreen' && true}
+                    icon={`file${routeNames[index] === 'SelectAccountScreen' ? '' : '-outline'}`}
+                    label="Individual"
+                    onPress={() => navigation.navigate<keyof RootDrawerParamList>('SelectAccountScreen')}
                 />
-                <DrawerPapper.Section title='Consultas'>
-                    <DrawerPapper.Item
-                        active={routeNames[index] === 'SelectAccountScreen' && true}
-                        icon={`file${routeNames[index] === 'SelectAccountScreen' ? '' : '-outline'}`}
-                        label="Individual"
-                        onPress={() => navigation.navigate<keyof RootDrawerParamList>('SelectAccountScreen')}
-                    />
-                    <DrawerPapper.Item
-                        active={routeNames[index] === 'SelectGroupsScreen' && true}
-                        icon={`file-multiple${routeNames[index] === 'SelectGroupsScreen' ? '' : '-outline'}`}
-                        label="Grupal"
-                        onPress={() => navigation.navigate<keyof RootDrawerParamList>('SelectGroupsScreen')}
-                    />
-                    <DrawerPapper.Item
-                        active={routeNames[index] === 'SelectAccountsScreen' && true}
-                        icon={`file-cog${routeNames[index] === 'SelectAccountsScreen' ? '' : '-outline'}`}
-                        label="Avanzado"
-                        onPress={() => navigation.navigate<keyof RootDrawerParamList>('SelectAccountsScreen')}
-                    />
-                </DrawerPapper.Section>
-                <DrawerPapper.Section title='Otros'>
-                    <DrawerPapper.Item
-                        active={routeNames[index] === 'DownloadScreen' && true}
-                        icon={`file-download${routeNames[index] === 'DownloadScreen' ? '' : '-outline'}`}
-                        label="Descargas"
-                        onPress={() => navigation.navigate<keyof RootDrawerParamList>('DownloadScreen')}
-                    />
-                    <DrawerPapper.Item
-                        active={routeNames[index] === 'ProfileScreen' && true}
-                        icon={`account-circle${routeNames[index] === 'PerfilScreen' ? '' : '-outline'}`}
-                        label="Perfil"
-                        onPress={() => navigation.navigate<keyof RootDrawerParamList>('ProfileScreen')}
-                    />
-                    <DrawerPapper.Item
-                        active={routeNames[index] === 'DetailsInfoScreen' && true}
-                        icon={'help'}
-                        label="Acerca de Prelmo"
-                        onPress={() => navigation.navigate<keyof RootDrawerParamList>('DetailsInfoScreen')}
-                    />
-                    <DrawerPapper.Item
-                        label={'Tema'}
-                        onPress={changeTheme}
-                        right={() =>
-                            <IconButton icon={dark ? 'white-balance-sunny' : 'weather-night'} onPress={() => {
-                                !dark ? AppDispatch(updateTheme(CombinedDarkTheme))
-                                    : AppDispatch(updateTheme(CombinedDefaultTheme))
-                            }} />
-                        }
-                    />
-                </DrawerPapper.Section>
                 <DrawerPapper.Item
-                    icon="logout"
-                    label='Cerrar sesión'
-                    onPress={() => {
-                        queryClient.clear();
-                        AppDispatch(logOut());
-                    }}
+                    active={routeNames[index] === 'SelectGroupsScreen' && true}
+                    icon={`file-multiple${routeNames[index] === 'SelectGroupsScreen' ? '' : '-outline'}`}
+                    label="Grupal"
+                    onPress={() => navigation.navigate<keyof RootDrawerParamList>('SelectGroupsScreen')}
                 />
-                {Platform.OS === 'ios' && <View style={{ height: 70 }} />}
-            </DrawerContentScrollView>
-        </View>
+                <DrawerPapper.Item
+                    active={routeNames[index] === 'SelectAccountsScreen' && true}
+                    icon={`file-cog${routeNames[index] === 'SelectAccountsScreen' ? '' : '-outline'}`}
+                    label="Avanzado"
+                    onPress={() => navigation.navigate<keyof RootDrawerParamList>('SelectAccountsScreen')}
+                />
+            </DrawerPapper.Section>
+            <DrawerPapper.Section title='Otros'>
+                <DrawerPapper.Item
+                    active={routeNames[index] === 'DownloadScreen' && true}
+                    icon={`file-download${routeNames[index] === 'DownloadScreen' ? '' : '-outline'}`}
+                    label="Descargas"
+                    onPress={() => navigation.navigate<keyof RootDrawerParamList>('DownloadScreen')}
+                />
+                <DrawerPapper.Item
+                    active={routeNames[index] === 'ProfileScreen' && true}
+                    icon={`account-circle${routeNames[index] === 'PerfilScreen' ? '' : '-outline'}`}
+                    label="Perfil"
+                    onPress={() => navigation.navigate<keyof RootDrawerParamList>('ProfileScreen')}
+                />
+                <DrawerPapper.Item
+                    active={routeNames[index] === 'DetailsInfoScreen' && true}
+                    icon={'help'}
+                    label="Acerca de Prelmo"
+                    onPress={() => navigation.navigate<keyof RootDrawerParamList>('DetailsInfoScreen')}
+                />
+                <DrawerPapper.Item
+                    label={'Tema'}
+                    onPress={changeTheme}
+                    right={() =>
+                        <IconButton icon={dark ? 'white-balance-sunny' : 'weather-night'} onPress={() => {
+                            !dark ? AppDispatch(updateTheme(CombinedDarkTheme))
+                                : AppDispatch(updateTheme(CombinedDefaultTheme))
+                        }} />
+                    }
+                />
+            </DrawerPapper.Section>
+            <DrawerPapper.Item
+                icon="logout"
+                label='Cerrar sesión'
+                onPress={() => {
+                    queryClient.clear();
+                    AppDispatch(logOut());
+                }}
+            />
+            {Platform.OS === 'ios' && <View style={{ height: 70 }} />}
+        </DrawerContentScrollView>
     )
 }
 

@@ -104,9 +104,13 @@ export const LogInScreen = ({ navigation, route }: Props) => {
 
     const deleteCheck = async () => {
         try {
-            await keychain.resetGenericPassword({ service: Service['Keychain-Saved'] });
-            await keychain.resetGenericPassword({ service: Service['Keychain-Saved-Biometry'] });
-            await EncryptedStorage.removeItem(Service['Encrypted-Saved']);
+            const generics = await keychain.getAllGenericPasswordServices();
+            generics.forEach(async el => {
+                await keychain.resetGenericPassword({ service: el });
+            });
+            if (await EncryptedStorage.getItem(Service['Encrypted-Saved'])) {
+                await EncryptedStorage.removeItem(Service['Encrypted-Saved']);
+            }
             AppDispatch(updateSaved(null));
             setGetted(undefined);
             reset();

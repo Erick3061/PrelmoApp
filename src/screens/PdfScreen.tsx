@@ -1,14 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Pdf from 'react-native-pdf';
 import { RootStackParamList } from '../types/types';
 import { Loading } from '../components/Loading';
-import { Appbar, Button, Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { useAppSelector } from '../app/hooks';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PdfScreen'>;
 export const PdfScreen = ({ navigation, route: { params: { name, url } } }: Props) => {
@@ -16,22 +14,12 @@ export const PdfScreen = ({ navigation, route: { params: { name, url } } }: Prop
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState<boolean>(false);
     const { handleError } = useContext(NotificationContext);
-    const insets = useSafeAreaInsets();
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerShown: true,
             title: name,
-            header: ({ navigation, options: { }, back }) => {
-                return (
-                    <Appbar style={[dark && { backgroundColor: colors.card }]} safeAreaInsets={insets}>
-                        {back && <Appbar.BackAction iconColor={colors.primary} onPress={() => navigation.goBack()} />}
-                        <Appbar.Content title={name} style={[Platform.OS === 'ios' && { height: insets.top ?? 50, justifyContent: 'center' }]} />
-                    </Appbar>
-                )
-            }
         })
-    }, [navigation, dark, insets]);
+    }, [navigation, dark]);
 
     useEffect(() => {
         setLoading(true);
@@ -52,7 +40,7 @@ export const PdfScreen = ({ navigation, route: { params: { name, url } } }: Prop
                 !error &&
                 <Pdf
                     source={source}
-                    onLoadComplete={(numberOfPages, filePath) => { setLoading(false) }}
+                    onLoadComplete={() => { setLoading(false) }}
                     onError={(error) => {
                         setError(String(error));
                         setLoading(false)
@@ -62,26 +50,6 @@ export const PdfScreen = ({ navigation, route: { params: { name, url } } }: Prop
                     trustAllCerts={false}
                 />
             }
-            {/* <FAB
-                icon="share-variant"
-                style={styles.fab}
-                onPress={async () => {
-                    try {
-                        await Share.open({
-                            url: source.uri
-                        })
-                    } catch (error) { }
-                }}
-            /> */}
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    fab: {
-        position: 'absolute',
-        margin: 16,
-        right: 0,
-        bottom: 0,
-    },
-})
