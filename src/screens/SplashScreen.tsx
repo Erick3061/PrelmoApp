@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Animated, { BounceIn, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
-import { Orientation, RootStackParamList } from '../types/types';
+import { RootStackParamList } from '../types/types';
 import { useAppSelector } from '../app/hooks';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
 
@@ -19,7 +19,7 @@ export const SplashScreen = ({ navigation }: Props) => {
         (domain !== '')
             ? navigation.replace('LogInScreen')
             : navigation.replace('DomainScreen')
-    }, 1000);
+    }, 0);
 
     const scale = useSharedValue(.95);
 

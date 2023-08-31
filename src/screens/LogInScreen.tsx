@@ -2,9 +2,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, View, TouchableWithoutFeedback, Keyboard, ScrollView, Alert } from 'react-native';
 import { RootStackParamList, Saved, Service } from '../types/types';
-
 import { Appbar, Button, Checkbox, IconButton, Text, TextInput, TouchableRipple } from 'react-native-paper';
-import Animated, { BounceIn, FadeInDown } from 'react-native-reanimated';
+import Animated, { BounceIn, FadeIn } from 'react-native-reanimated';
 import { style } from '../../App';
 import { SocialNetworks } from '../components/SocialNetworks';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -19,7 +18,7 @@ import { setUser, updateFE, updateSaved } from '../features/configSlice';
 import keychain from 'react-native-keychain';
 import { RequestContext } from '../context/RequestContext';
 import { NotificationContext } from '../components/Notification/NotificationtContext';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'LogInScreen'>;
@@ -238,7 +237,7 @@ export const LogInScreen = ({ navigation, route }: Props) => {
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <>
                 <Loading refresh={isLoading} />
-                <Animated.View entering={FadeInDown.delay(350).duration(400)}
+                <Animated.View entering={FadeIn.delay(350).duration(400)}
                     style={[
                         style.container,
                         { paddingHorizontal: '7%', justifyContent: 'center' }
@@ -246,27 +245,9 @@ export const LogInScreen = ({ navigation, route }: Props) => {
                 >
                     <View>
                         <ScrollView>
-                            <Text style={{ marginVertical: 5, textAlign: 'center', fontWeight: 'bold' }} variant='titleLarge'>¡Bienvenido!</Text>
+                            <Text style={{ marginVertical: 5, textAlign: 'center', fontWeight: 'bold' }} variant='headlineSmall'>¡Bienvenido!</Text>
                             <Text style={{ textAlign: 'center', color: colors.outline }}>Ingrese sus datos para iniciar sesión</Text>
                             <KeyboardAvoidingView style={{ flex: 1 }} enabled behavior={Platform.OS === "ios" ? "padding" : undefined}>
-                                {/* <TextInput
-                                    disabled
-                                    label="Dirección del Servidor"
-                                    placeholder="Type something"
-                                    style={{
-                                        flex: 1,
-                                        backgroundColor: 'transparent'
-                                    }}
-                                    left={<TextInput.Icon icon="server" />}
-                                    right={
-                                        <TextInput.Icon
-                                            icon="cloud-sync"
-                                            color={() => colors.primary}
-                                            onPress={(() => navigation.navigate('DomainScreen'))}
-                                        />
-                                    }
-                                    value={domain.replace('https://', '').replace('http://', '').replace('/', '')}
-                                /> */}
                                 <Input
                                     editable={(!isLoading)}
                                     formInputs={control._defaultValues}

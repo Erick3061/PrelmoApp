@@ -10,7 +10,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { TCAPScreen } from '../screens/TCAPScreen';
 import { PdfScreen } from '../screens/PdfScreen';
 import { DownloadScreen } from '../screens/DownloadScreen';
-import { SplashScreen } from '../screens/SplashScreen';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { Alert, ColorSchemeName, Dimensions, Platform, StatusBar, useColorScheme } from 'react-native';
 import { updateTheme } from '../features/themeSlice';
@@ -30,6 +29,8 @@ import { ResultAccountsScreen } from '../screens/ResultAccountsScreen';
 import { TableScreen } from '../screens/TableScreen';
 import { OrientationLocker, OrientationType } from 'react-native-orientation-locker';
 import { ChangePasswordScreen } from '../screens/ChangePasswordScreen';
+import SplashScreen from 'react-native-splash-screen'
+
 
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -94,34 +95,21 @@ export const Stack = () => {
             (saved === Saved.save) && AppDispatch(updateSaved(Saved.save));
             (saved === Saved.saveBiometry) && AppDispatch(updateSaved(Saved.saveBiometry));
             (saved === null) && AppDispatch(updateSaved(null));
-
-
-            // const domain: string = await EncryptedStorage.getItem(Service["Encrypted-Domain"]) ?? '';
-
-            // if (domain !== '') {
             AppDispatch(updateDomain('https://api-consultas.prelmo.com/v1'));
             autoLogIn();
-            // }
-            // else {
-            //     AppDispatch(updateStatus('unlogued'));
-            // }
-
         } catch (error) {
             Alert.alert('Error', `${error}`);
         }
     }
 
     useEffect(() => {
-        // if (whithSystem)
         (color === 'light') ? AppDispatch(updateTheme(CombinedDefaultTheme)) : AppDispatch(updateTheme(CombinedDarkTheme));
-        //Todo cambiar el tema manual
-        // }
     }, [color]);
 
     useEffect(() => {
         setConfig();
+        SplashScreen.hide();
     }, []);
-
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
@@ -152,7 +140,6 @@ export const Stack = () => {
                                     </>
                                     :
                                     <RootStack.Group>
-                                        <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
                                         <RootStack.Screen name="LogInScreen" component={LogInScreen} />
                                     </RootStack.Group>
                             }
