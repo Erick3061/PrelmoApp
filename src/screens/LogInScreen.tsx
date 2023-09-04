@@ -164,6 +164,7 @@ export const LogInScreen = ({ navigation, route }: Props) => {
     const setValues = async () => {
         try {
             const data = await keychain.getGenericPassword({ service: Service['Keychain-Saved'] });
+
             switch (saved) {
                 case Saved.save:
                     if (data) {
@@ -182,8 +183,9 @@ export const LogInScreen = ({ navigation, route }: Props) => {
                 default:
                     setGetted(undefined);
             }
+
         } catch (error) {
-            handleError(`${error} `);
+            handleError(`${error}`);
         }
     }
 
@@ -220,7 +222,6 @@ export const LogInScreen = ({ navigation, route }: Props) => {
         })
     }, [navigation, dark, insets]);
 
-
     useEffect(() => {
         const state = navigation.getState();
         const routes = state.routes;
@@ -230,8 +231,9 @@ export const LogInScreen = ({ navigation, route }: Props) => {
             routes: routes.slice(0),
             index: 0
         });
-        setValues();
-    }, []);
+
+        saved !== null && setValues();
+    }, [, saved]);
 
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

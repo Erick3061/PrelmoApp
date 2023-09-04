@@ -38,7 +38,7 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 export const Stack = () => {
     const {
         theme: { theme },
-        config: { status }
+        config: { status, saved: S },
     } = useAppSelector(state => state);
     const { CheckAuth } = useContext(RequestContext);
     const color: ColorSchemeName = useColorScheme();
@@ -74,6 +74,7 @@ export const Stack = () => {
             .catch(error => Alert.alert('Error', `${error}`));
     }
 
+
     async function setConfig() {
         try {
             const directory: string = (Platform.OS === 'ios') ? RNFS.DocumentDirectoryPath : RNFS.ExternalCachesDirectoryPath;
@@ -92,10 +93,19 @@ export const Stack = () => {
             AppDispatch(updateisCompatible(isCompatible));
 
             const saved = await EncryptedStorage.getItem(Service["Encrypted-Saved"]);
-            (saved === Saved.save) && AppDispatch(updateSaved(Saved.save));
-            (saved === Saved.saveBiometry) && AppDispatch(updateSaved(Saved.saveBiometry));
-            (saved === null) && AppDispatch(updateSaved(null));
+
+            switch (saved) {
+                case 'save':
+                    AppDispatch(updateSaved(Saved.save));
+                    break;
+
+                case 'saveBiometry':
+                    AppDispatch(updateSaved(Saved.saveBiometry))
+                    break;
+            }
+
             AppDispatch(updateDomain('https://api-consultas.prelmo.com/v1'));
+            SplashScreen.hide();
             autoLogIn();
         } catch (error) {
             Alert.alert('Error', `${error}`);
@@ -108,7 +118,6 @@ export const Stack = () => {
 
     useEffect(() => {
         setConfig();
-        SplashScreen.hide();
     }, []);
 
     return (
