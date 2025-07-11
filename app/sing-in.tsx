@@ -1,0 +1,336 @@
+import { style } from '@/app/_layout'
+import { Input } from '@/components/Input'
+import Loading from '@/components/Loading'
+import { SocialNetworks } from '@/components/SocialNetworks'
+import { Saved } from '@/interface/app.store.interface'
+import { InputsSingIn } from '@/interface/auth.store.interface'
+import useAppStore from '@/utils/app.store'
+import useAuthStore from '@/utils/auth.store'
+import { NotificationContext } from '@/utils/NotificationtContext'
+import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
+import * as LocalAuthentication from 'expo-local-authentication'
+import { Link, Stack, useRouter } from 'expo-router'
+import React, { useContext, useEffect, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from 'react-native'
+import { Appbar, Button, Checkbox, IconButton, Text, TextInput, TouchableRipple } from 'react-native-paper'
+import Animated, { BounceIn, FadeIn } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import AuthService from '../services/auth.service'
+
+const SingIn = () => {
+    const { control, handleSubmit, reset, setValue, getValues } = useForm<InputsSingIn>({ defaultValues: { email: 'erick.andrade@pem-sa.com', password: '123456' } });
+    const { handleError, notification } = useContext(NotificationContext);
+    const [isShow, setIsShow] = useState<boolean>(true);
+    const [getted, setGetted] = useState<InputsSingIn>();
+    const [isChanged, setIsChanged] = useState<boolean>(false);
+    const { saved } = useAppStore();
+    const router = useRouter();
+    const insets = useSafeAreaInsets();
+    const updateFE = useAppStore(store => store.updateFE);
+    const logIn = useAuthStore(store => store.logIn);
+    const setSaved = useAppStore(store => store.setSaved);
+
+    const isCompatible = true;
+
+    const { mutate, isPending } = useMutation({
+        mutationKey: ['LogIn'],
+        mutationFn: AuthService.signIn,
+        retry: 0,
+        onError: async err => {
+            const Err = err as AxiosError;
+            console.log(JSON.stringify(Err, null, 3));
+            handleError(Err.message);
+        },
+        onSuccess: async data => {
+            if (isCompatible) {
+                if (saved === Saved.saveBiometry) await Save(getValues('email'), getValues('password'), true);
+                if (saved === Saved.save) await Save(getValues('email'), getValues('password'), false);
+            } else
+                if (saved === Saved.save) await Save(getValues('email'), getValues('password'), false);
+
+            reset();
+            updateFE(false);
+            if (data.termsAndConditions) { }
+            else router.navigate('/tcap', {});
+            logIn(data);
+            router.navigate('/(drawer)');
+        },
+    })
+
+    const onSubmit: SubmitHandler<InputsSingIn> = async (data) => {
+        mutate(data);
+    };
+
+    const useBiometricos = async () => {
+        const resp = await LocalAuthentication.authenticateAsync();
+        if (resp.success) onSubmit({ email: 'erick.andrade@pem-sa.com', password: '123456' });
+        else {
+            notification({
+                type: 'warning',
+                title: 'Alerta',
+                text: `${resp.error}`,
+            });
+        }
+    }
+
+    const setValues = async () => {
+        // router.replace('/(drawer)');
+        // try {
+        //     const data = await keychain.getGenericPassword({ service: Service['Keychain-Saved'] });
+
+        //     switch (saved) {
+        //         case Saved.save:
+        //             if (data) {
+        //                 setGetted({ email: data.username, password: data.password });
+        //                 setValue('email', data.username);
+        //                 if (firstEntry) onSubmit({ email: data.username, password: data.password });
+        //             }
+        //             break;
+        //         case Saved.saveBiometry:
+        //             if (data) {
+        //                 setGetted({ email: data.username, password: data.password });
+        //                 setValue('email', data.username);
+        //                 if (firstEntry) useBiometricos();
+        //             }
+        //             break;
+        //         default:
+        //             setGetted(undefined);
+        //     }
+
+        // } catch (error) {
+        //     handleError(`${error}`);
+        // }
+    }
+
+    const askSave = () => {
+        Alert.alert('Alerta', '¿Realmente quieres Recordar la contraseña?', [
+            {
+                text: 'cancelar'
+            },
+            { text: 'ok', onPress: () => setSaved(Saved.save) }
+        ], {
+            cancelable: true
+        });
+    }
+
+    const check = () => {
+        if (isCompatible) {
+            Alert.alert('Activar lector de biometría', '¿Desea activar el inicio de sesión con lectores biométricos? \n\nSiempre se puede cambiar esto en los ajustes de la aplicación', [
+                { text: 'no', onPress: () => askSave() },
+                {
+                    text: 'si', onPress: async () => {
+                        setSaved(Saved.saveBiometry);
+                    }
+                }
+            ], { cancelable: true })
+        }
+        else {
+            askSave()
+        }
+    }
+
+    const deleteCheck = async () => {
+        try {
+            setSaved(null);
+            setGetted(undefined);
+            reset();
+        } catch (error) { handleError(`${error}`); console.log(error) }
+    }
+
+    const Save = async (user: string, password: string, isBiometry: boolean) => {
+        // try {
+        //     (saved !== null) && await EncryptedStorage.setItem(Service['Encrypted-Saved'], saved);
+
+        //     if (isBiometry) {
+        //         if (!getted) {
+        //             await keychain.setGenericPassword(user, password, {
+        //                 service: Service['Keychain-Saved']
+        //             });
+        //             await keychain.setGenericPassword(user, password, {
+        //                 accessControl: keychain.ACCESS_CONTROL.BIOMETRY_ANY,
+        //                 service: Service['Keychain-Saved-Biometry']
+        //             });
+        //         } else {//TODO : Verificar este paso  para la actualizacón de los datos
+
+        //         }
+        //     } else {
+        //         if (!getted) {
+        //             await keychain.setGenericPassword(user, password, {
+        //                 service: Service['Keychain-Saved']
+        //             });
+        //         } else {//TODO : Verificar este paso  para la actualizacón de los datos
+
+        //         }
+        //     }
+        // } catch (error) {
+        //     handleError(`${error}`);
+        // }
+    }
+
+    useEffect(() => {
+        // const state = navigation.getState();
+        // const routes = state.routes;
+
+        // navigation.reset({
+        //     ...state,
+        //     routes: routes.slice(0),
+        //     index: 0
+        // });
+        saved !== null && setValues();
+    }, [, router, saved, setValues]);
+
+    return (
+        <>
+            <Stack.Screen options={{
+                header: () => {
+                    return (
+                        <Appbar safeAreaInsets={insets}>
+                            <Image
+                                source={require('../assets/images/prelmo2.png')}
+                                style={[
+                                    // dark && { tintColor: colors.onSurface },
+                                    {
+                                        marginHorizontal: 10,
+                                        resizeMode: 'contain',
+                                        top: 10
+                                    },
+                                    Platform.OS === 'ios' ? {
+                                        height: 30,
+                                        width: 90
+                                    }
+                                        : {
+                                            height: '100%',
+                                            width: 90,
+                                        }
+                                ]}
+                            />
+                        </Appbar>
+                    )
+                }
+            }} />
+            <Loading refresh={isPending} />
+            <Animated.View entering={FadeIn.delay(350).duration(400)}
+                style={[
+                    style.container,
+                    { paddingHorizontal: '7%', justifyContent: 'center' }
+                ]}
+            >
+                <View>
+                    <ScrollView>
+                        <Text style={{ marginVertical: 5, textAlign: 'center', fontWeight: 'bold' }} variant='headlineSmall'>¡Bienvenido!</Text>
+                        <Text style={{ textAlign: 'center' }}>Ingrese sus datos para iniciar sesión</Text>
+                        <KeyboardAvoidingView style={{ flex: 1 }} enabled behavior={Platform.OS === "ios" ? "padding" : undefined}>
+                            <Input
+                                editable={(!isPending)}
+                                formInputs={control._defaultValues}
+                                control={control}
+                                name={'email'}
+                                placeholder='ejemplo@correo.com'
+                                keyboardType='email-address'
+                                rules={{ required: { value: true, message: 'Campo requerido' } }}
+                                label='Correo'
+                                returnKeyType='next'
+                                autoCapitalize='none'
+                                style={{ backgroundColor: 'transparent' }}
+                                left={<TextInput.Icon icon={'email'} />}
+                            />
+
+                            <Input
+                                onR={(nextInput) => { nextInput = nextInput }}
+                                editable={(!isPending)}
+                                formInputs={control._defaultValues}
+                                control={control}
+                                name={'password'}
+                                keyboardType='default'
+                                secureTextEntry={isShow ? true : false}
+                                placeholder='**********'
+                                rules={{ required: { value: true, message: 'Campo requerido' } }}
+                                label='Contraseña'
+                                onSubmitEditing={handleSubmit(onSubmit)}
+                                returnKeyType='next'
+                                autoCapitalize='none'
+                                onChange={async ({ nativeEvent: { text } }) => {
+                                    // if ((isCompatible && saved === Saved.saveBiometry && getted) && text !== '') {
+                                    //     setIsChanged(true);
+                                    // }
+                                    // if ((isCompatible && saved === Saved.saveBiometry && getted) && text === '') {
+                                    //     setIsChanged(false);
+                                    // }
+                                }}
+                                style={{ backgroundColor: 'transparent' }}
+                                left={<TextInput.Icon icon={'lock'} />}
+                                right={
+                                    <TextInput.Icon
+                                        icon={isShow ? 'eye-off' : 'eye'}
+                                        // color={(focused) => focused ? undefined : colors.primary}
+                                        onPress={() => setIsShow(!isShow)}
+                                        forceTextInputFocus={false}
+                                    />
+                                }
+                            />
+
+                            <TouchableRipple style={{ marginVertical: 10 }} onPress={() => (saved === null) ? check() : deleteCheck()} >
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Checkbox
+                                        status={(saved !== null) ? 'checked' : 'unchecked'}
+                                        onPress={() => (saved === null) ? check() : deleteCheck()}
+                                    />
+                                    <Text>Recordar contraseña</Text>
+                                </View>
+                            </TouchableRipple>
+                            {
+                                // (isCompatible && saved === 'saveBiometry' && getted && !isChanged && false)
+                                true
+                                    ?
+                                    <View style={{ alignItems: 'center' }}>
+                                        <Animated.View entering={BounceIn} >
+                                            <IconButton icon='fingerprint' size={40} onPress={useBiometricos} />
+                                        </Animated.View>
+                                        <Text variant='labelSmall' style={{ marginTop: 10 }}>Iniciar sesión con biométricos</Text>
+                                    </View>
+                                    :
+                                    <Animated.View entering={BounceIn} >
+                                        <Button
+                                            mode='contained'
+                                            onPress={handleSubmit(onSubmit)}
+                                            loading={(isPending)}
+                                            disabled={(isPending)}
+                                            style={{ alignSelf: 'center' }}
+                                            labelStyle={{ textTransform: 'uppercase' }}
+                                        >Iniciar Sesión</Button>
+                                    </Animated.View>
+                            }
+                            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginVertical: 5 }}>
+                                <TouchableOpacity
+                                    onPress={() => { }
+                                        // navigation.navigate('PdfScreen', {
+                                        //     name: 'Registro', url: `${domain.replace('/v1', '')}/docs/REGISTRO-PLATAFORMA.pdf`
+                                        // })
+                                    }
+                                    disabled={isPending} >
+                                    <Text variant='titleSmall' style={[{ textAlign: 'center', marginVertical: 10 }]}>Regístrate</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={() =>
+                                    Alert.alert('Alerta', 'Contacta a tu titular para recuperar tu contraseña', [], { cancelable: true })
+                                }
+                                    disabled={isPending} >
+                                    <Text variant='titleSmall' style={[{ textAlign: 'center', marginVertical: 10 }]} >Olvidé mi contraseña</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <Link href={"/tcap"} style={{ marginVertical: 15 }}>
+                                <Text variant='titleSmall' style={{ textAlign: 'center' }}>Términos, condiciones y aviso de privacidad</Text>
+                            </Link>
+                        </KeyboardAvoidingView>
+                        <SocialNetworks />
+                    </ScrollView>
+                </View>
+            </Animated.View>
+        </>
+
+    )
+}
+
+export default SingIn;
