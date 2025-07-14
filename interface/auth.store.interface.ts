@@ -36,6 +36,8 @@ export interface AuthActions {
     checkAuth: () => void;
     logIn: (user: User) => void;
     logOut: () => void;
+    setData: ({ email, password }: { email: string; password: string; }) => void;
+    removeData: () => void;
 }
 
 export interface AuthState extends AuthActions {
@@ -43,4 +45,8 @@ export interface AuthState extends AuthActions {
     User?: User;
     token?: string;
     refreshToken?: string;
+    authData?: {
+        email: string;
+        password: string;
+    }
 }

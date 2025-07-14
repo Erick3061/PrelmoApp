@@ -6,12 +6,11 @@ import { Saved } from '@/interface/app.store.interface'
 import { InputsSingIn } from '@/interface/auth.store.interface'
 import useAppStore from '@/utils/app.store'
 import useAuthStore from '@/utils/auth.store'
-import { NotificationContext } from '@/utils/NotificationtContext'
+import useNotificationStore from '@/utils/notification.store'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
-import * as LocalAuthentication from 'expo-local-authentication'
 import { Link, Stack, useRouter } from 'expo-router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from 'react-native'
 import { Appbar, Button, Checkbox, IconButton, Text, TextInput, TouchableRipple } from 'react-native-paper'
@@ -20,8 +19,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import AuthService from '../services/auth.service'
 
 const SingIn = () => {
-    const { control, handleSubmit, reset, setValue, getValues } = useForm<InputsSingIn>({ defaultValues: { email: 'erick.andrade@pem-sa.com', password: '123456' } });
-    const { handleError, notification } = useContext(NotificationContext);
+    const { control, handleSubmit, reset, setValue, getValues } = useForm<InputsSingIn>({ defaultValues: { email: '', password: '' } });
+    const handleError = useNotificationStore(state => state.handleError);
     const [isShow, setIsShow] = useState<boolean>(true);
     const [getted, setGetted] = useState<InputsSingIn>();
     const [isChanged, setIsChanged] = useState<boolean>(false);
@@ -30,6 +29,10 @@ const SingIn = () => {
     const insets = useSafeAreaInsets();
     const updateFE = useAppStore(store => store.updateFE);
     const logIn = useAuthStore(store => store.logIn);
+    const setData = useAuthStore(store => store.setData);
+    const authData = useAuthStore(store => store.authData);
+    const firstEntry = useAppStore(store => store.firstEntry);
+    const removeData = useAuthStore(store => store.removeData);
     const setSaved = useAppStore(store => store.setSaved);
 
     const isCompatible = true;
@@ -40,7 +43,6 @@ const SingIn = () => {
         retry: 0,
         onError: async err => {
             const Err = err as AxiosError;
-            console.log(JSON.stringify(Err, null, 3));
             handleError(Err.message);
         },
         onSuccess: async data => {
@@ -63,123 +65,89 @@ const SingIn = () => {
         mutate(data);
     };
 
-    const useBiometricos = async () => {
-        const resp = await LocalAuthentication.authenticateAsync();
-        if (resp.success) onSubmit({ email: 'erick.andrade@pem-sa.com', password: '123456' });
-        else {
-            notification({
-                type: 'warning',
-                title: 'Alerta',
-                text: `${resp.error}`,
-            });
+    // const Biometricos = async () => {
+    //     const resp = await LocalAuthentication.authenticateAsync();
+    //     if (resp.success) onSubmit({ email: authData?.email ?? '', password: authData?.password ?? '' });
+    //     else {
+    //         notification({
+    //             type: 'warning',
+    //             title: 'Alerta',
+    //             text: `${resp.error}`,
+    //         });
+    //     }
+    // }
+
+    const setValuesStart = () => {
+        switch (saved) {
+            case Saved.save:
+                if (authData) {
+                    setGetted({ email: authData.email, password: authData.password });
+                    setValue('email', authData.email);
+                    if (firstEntry) onSubmit({ email: authData.email, password: authData.password });
+                }
+                break;
+            // case Saved.saveBiometry:
+            //     if (authData) {
+            //         setGetted({ email: authData.email, password: authData.password });
+            //         setValue('email', authData.email);
+            //         if (firstEntry) Biometricos();
+            //     }
+            //     break;
+            default:
+                setGetted(undefined);
         }
-    }
+    };
 
-    const setValues = async () => {
-        // router.replace('/(drawer)');
-        // try {
-        //     const data = await keychain.getGenericPassword({ service: Service['Keychain-Saved'] });
-
-        //     switch (saved) {
-        //         case Saved.save:
-        //             if (data) {
-        //                 setGetted({ email: data.username, password: data.password });
-        //                 setValue('email', data.username);
-        //                 if (firstEntry) onSubmit({ email: data.username, password: data.password });
-        //             }
-        //             break;
-        //         case Saved.saveBiometry:
-        //             if (data) {
-        //                 setGetted({ email: data.username, password: data.password });
-        //                 setValue('email', data.username);
-        //                 if (firstEntry) useBiometricos();
-        //             }
-        //             break;
-        //         default:
-        //             setGetted(undefined);
-        //     }
-
-        // } catch (error) {
-        //     handleError(`${error}`);
-        // }
-    }
 
     const askSave = () => {
         Alert.alert('Alerta', '¿Realmente quieres Recordar la contraseña?', [
-            {
-                text: 'cancelar'
-            },
+            { text: 'cancelar' },
             { text: 'ok', onPress: () => setSaved(Saved.save) }
-        ], {
-            cancelable: true
-        });
+        ], { cancelable: true });
     }
 
     const check = () => {
         if (isCompatible) {
             Alert.alert('Activar lector de biometría', '¿Desea activar el inicio de sesión con lectores biométricos? \n\nSiempre se puede cambiar esto en los ajustes de la aplicación', [
                 { text: 'no', onPress: () => askSave() },
-                {
-                    text: 'si', onPress: async () => {
-                        setSaved(Saved.saveBiometry);
-                    }
-                }
+                { text: 'si', onPress: async () => { setSaved(Saved.saveBiometry); } }
             ], { cancelable: true })
         }
-        else {
-            askSave()
-        }
+        else { askSave() }
     }
 
     const deleteCheck = async () => {
         try {
             setSaved(null);
             setGetted(undefined);
+            removeData();
             reset();
         } catch (error) { handleError(`${error}`); console.log(error) }
     }
 
-    const Save = async (user: string, password: string, isBiometry: boolean) => {
-        // try {
-        //     (saved !== null) && await EncryptedStorage.setItem(Service['Encrypted-Saved'], saved);
+    const Save = (user: string, password: string, isBiometry: boolean) => {
+        try {
+            if (isBiometry) {
+                if (!getted) {
+                    setData({ email: user, password });
+                } else {//TODO : Verificar este paso  para la actualizacón de los datos
 
-        //     if (isBiometry) {
-        //         if (!getted) {
-        //             await keychain.setGenericPassword(user, password, {
-        //                 service: Service['Keychain-Saved']
-        //             });
-        //             await keychain.setGenericPassword(user, password, {
-        //                 accessControl: keychain.ACCESS_CONTROL.BIOMETRY_ANY,
-        //                 service: Service['Keychain-Saved-Biometry']
-        //             });
-        //         } else {//TODO : Verificar este paso  para la actualizacón de los datos
+                }
+            } else {
+                if (!getted) {
+                    setData({ email: user, password });
+                } else {//TODO : Verificar este paso  para la actualizacón de los datos
 
-        //         }
-        //     } else {
-        //         if (!getted) {
-        //             await keychain.setGenericPassword(user, password, {
-        //                 service: Service['Keychain-Saved']
-        //             });
-        //         } else {//TODO : Verificar este paso  para la actualizacón de los datos
-
-        //         }
-        //     }
-        // } catch (error) {
-        //     handleError(`${error}`);
-        // }
+                }
+            }
+        } catch (error) {
+            handleError(`${error}`);
+        }
     }
 
     useEffect(() => {
-        // const state = navigation.getState();
-        // const routes = state.routes;
-
-        // navigation.reset({
-        //     ...state,
-        //     routes: routes.slice(0),
-        //     index: 0
-        // });
-        saved !== null && setValues();
-    }, [, router, saved, setValues]);
+        saved !== null && setValuesStart();
+    }, []);
 
     return (
         <>
@@ -190,7 +158,6 @@ const SingIn = () => {
                             <Image
                                 source={require('../assets/images/prelmo2.png')}
                                 style={[
-                                    // dark && { tintColor: colors.onSurface },
                                     {
                                         marginHorizontal: 10,
                                         resizeMode: 'contain',
@@ -281,12 +248,11 @@ const SingIn = () => {
                                 </View>
                             </TouchableRipple>
                             {
-                                // (isCompatible && saved === 'saveBiometry' && getted && !isChanged && false)
-                                true
+                                (isCompatible && saved === 'saveBiometry' && getted && !isChanged)
                                     ?
                                     <View style={{ alignItems: 'center' }}>
                                         <Animated.View entering={BounceIn} >
-                                            <IconButton icon='fingerprint' size={40} onPress={useBiometricos} />
+                                            <IconButton icon='fingerprint' size={40} onPress={() => { }} />
                                         </Animated.View>
                                         <Text variant='labelSmall' style={{ marginTop: 10 }}>Iniciar sesión con biométricos</Text>
                                     </View>
@@ -329,7 +295,6 @@ const SingIn = () => {
                 </View>
             </Animated.View>
         </>
-
     )
 }
 

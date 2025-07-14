@@ -1,8 +1,8 @@
+import { Notification } from '@/components/Notification';
 import { useSetConfig } from '@/hooks/useSetConfig';
 import { AuthStatus } from '@/interface/auth.store.interface';
 import { ThemeMode } from '@/interface/theme.store.interface';
 import useAuthStore from '@/utils/auth.store';
-import { NotificationProvider } from '@/utils/NotificationtContext';
 import useThemeStore from '@/utils/theme.store';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -26,18 +26,17 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <PaperProvider>
         <ThemeProvider value={mode === ThemeMode.dark ? DarkTheme : DefaultTheme}>
-          <NotificationProvider>
-            <Stack>
-              <Stack.Protected guard={status === AuthStatus.authorized}>
-                <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-              </Stack.Protected>
-              <Stack.Protected guard>
-                <Stack.Screen name="sing-in" />
-                <Stack.Screen name="tcap" options={{ presentation: 'modal', animation: 'fade', title: 'Términos, condiciones y aviso de privacidad' }} />
-                <Stack.Screen name="+not-found" />
-              </Stack.Protected>
-            </Stack>
-          </NotificationProvider>
+          <Stack>
+            <Stack.Protected guard={status === AuthStatus.authorized}>
+              <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+            </Stack.Protected>
+            <Stack.Protected guard>
+              <Stack.Screen name="sing-in" />
+              <Stack.Screen name="tcap" options={{ presentation: 'modal', animation: 'fade', title: 'Términos, condiciones y aviso de privacidad' }} />
+              <Stack.Screen name="+not-found" />
+            </Stack.Protected>
+          </Stack>
+          <Notification />
           <StatusBar style="auto" />
         </ThemeProvider>
       </PaperProvider>

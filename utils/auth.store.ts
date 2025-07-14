@@ -8,7 +8,9 @@ const authStore: StateCreator<AuthState> = (set) => ({
     status: AuthStatus.unauthorized,
     checkAuth: () => { },
     logIn: (user: User) => set((state) => ({ ...state, User: user, status: AuthStatus.authorized })),
-    logOut: () => { set((state) => ({ ...state, User: undefined, status: AuthStatus.unauthorized })) }
+    logOut: () => set((state) => ({ ...state, User: undefined, status: AuthStatus.unauthorized })),
+    setData: ({ email, password }) => set((state) => ({ ...state, authData: { email, password } })),
+    removeData: () => set((state) => ({ ...state, authData: undefined })),
 });
 
 const useAuthStore = create<AuthState>()(

@@ -1,14 +1,44 @@
-import useAuthStore from '@/utils/auth.store';
+import { SocialNetworks } from '@/components/SocialNetworks';
+import { Orientation } from '@/interface/app.store.interface';
+import { ThemeMode } from '@/interface/theme.store.interface';
+import useAppStore from '@/utils/app.store';
+import useThemeStore from '@/utils/theme.store';
 import React from 'react';
-import { View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Image, View } from 'react-native';
+import { Text } from 'react-native-paper';
 
 const Index = () => {
-    const logOut = useAuthStore(store => store.logOut);
+    const orientation = useAppStore(state => state.orientation);
+    const mode = useThemeStore(state => state.mode);
     return (
-        <View>
-            <Text>index</Text>
-            <Button onPress={logOut}>logout</Button>
+        <View style={[
+            { flex: 1, justifyContent: 'space-around' },
+            orientation === Orientation.landscape && {
+                flexDirection: 'row'
+            }
+        ]}>
+            <View style={[
+                { flex: 1, justifyContent: 'flex-end' },
+                orientation === Orientation.landscape && {
+                    justifyContent: 'center'
+                }
+            ]}>
+                <Image
+                    style={[
+                        { resizeMode: 'contain', width: '70%', height: '20%', alignSelf: 'center' },
+                        mode === ThemeMode.dark && { tintColor: 'gray' }
+                    ]}
+                    source={require('../../assets/images/prelmo2.png')}
+                />
+            </View>
+            <View style={[
+                { flex: 1, justifyContent: 'center', alignItems: 'center' }
+            ]}>
+                <Text variant='titleMedium'>central monitoreo 24hrs</Text>
+                <Text variant='titleMedium'>222 141 12 30</Text>
+                <SocialNetworks />
+                <Text variant='labelLarge'>By PEMSA development</Text>
+            </View>
         </View>
     )
 }

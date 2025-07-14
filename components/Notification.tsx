@@ -1,12 +1,16 @@
-import { NotificationContext } from '@/utils/NotificationtContext';
-import React, { useContext, useEffect } from 'react';
+import useNotificationStore from '@/utils/notification.store';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { Avatar, Card, IconButton, Portal, Surface } from 'react-native-paper';
+import { Avatar, Card, IconButton, Portal, Text } from 'react-native-paper';
 import Animated, { LightSpeedInRight, SlideOutRight } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Notification = () => {
-    const { show, content, closeNot, autoClose, timeOut } = useContext(NotificationContext);
+    const show = useNotificationStore(state => state.show);
+    const content = useNotificationStore(state => state.content);
+    const autoClose = useNotificationStore(state => state.autoClose);
+    const timeOut = useNotificationStore(state => state.timeOut);
+    const closeNot = useNotificationStore(state => state.closeNot);
 
     useEffect(() => {
         if (content && autoClose) {
@@ -17,7 +21,7 @@ export const Notification = () => {
                 clearTimeout(close);
             }
         }
-    }, [content, autoClose, timeOut, closeNot]);
+    }, [content, closeNot, autoClose, timeOut]);
 
     return (
         <Portal>
@@ -29,14 +33,22 @@ export const Notification = () => {
                         exiting={SlideOutRight}
                         style={[styles.containerNot]}
                     >
-                        <Surface elevation={4}>
+                        <Card>
                             <Card.Title
                                 title={content.title}
-                                subtitle={content.text}
-                                left={(props) => <Avatar.Icon {...props} icon="alert" />}
+                                subtitle={content.subtitle}
+                                left={(props) =>
+                                    (content.type === 'error') ?
+                                        <Avatar.Icon {...props} icon="alert-circle"
+                                        />
+                                        : undefined
+                                }
                                 right={(props) => <IconButton {...props} icon="close" onPress={closeNot} />}
                             />
-                        </Surface>
+                            <Card.Content>
+                                <Text>{content.text}</Text>
+                            </Card.Content>
+                        </Card>
                     </Animated.View>
                 }
             </SafeAreaView>
