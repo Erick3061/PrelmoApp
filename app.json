@@ -2,7 +2,7 @@
   "expo": {
     "name": "prelmo",
     "slug": "prelmo",
-    "version": "1.0.0",
+    "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "prelmo",
@@ -26,7 +26,9 @@
         "android.permission.USE_BIOMETRIC",
         "android.permission.USE_FINGERPRINT"
       ],
-      "package": "com.prelmo"
+      "package": "com.prelmo",
+      "versionCode": 12,
+      "version": "1.1.2"
     },
     "web": {
       "bundler": "metro",
@@ -39,9 +41,15 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash.png",
-          "imageWidth": 200,
+          "imageWidth": 250,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "image": "./assets/images/splash.png",
+            "imageWidth": 250,
+            "resizeMode": "contain",
+            "backgroundColor": "#000000"
+          }
         }
       ],
       "expo-secure-store",
