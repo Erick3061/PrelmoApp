@@ -9,8 +9,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
+import { Image, StyleSheet } from 'react-native';
+import { Appbar, PaperProvider } from 'react-native-paper';
 import 'react-native-reanimated';
 
 export default function RootLayout() {
@@ -19,6 +19,14 @@ export default function RootLayout() {
   const mode = useThemeStore(state => state.mode);
   const [loaded] = useFonts({ SpaceMono: require('../assets/fonts/poppins.regular.ttf') });
   const { status } = useAuthStore();
+  const Header = () => (
+    <Appbar.Header>
+      <Image
+        style={[style.appbar_image]}
+        source={require('../assets/images/prelmo2.png')}
+      />
+    </Appbar.Header>
+  );
 
   if (!loaded) return null;
 
@@ -31,7 +39,7 @@ export default function RootLayout() {
               <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
             </Stack.Protected>
             <Stack.Protected guard>
-              <Stack.Screen name="sing-in" />
+              <Stack.Screen name="sing-in" options={{ header: Header }} />
               <Stack.Screen name="tcap" options={{ presentation: 'modal', animation: 'fade', title: 'Términos, condiciones y aviso de privacidad' }} />
               <Stack.Screen name="+not-found" />
             </Stack.Protected>
@@ -58,5 +66,10 @@ export const style = StyleSheet.create({
     shadowOpacity: 0.20,
     shadowRadius: 3,
     elevation: 3,
-  }
+  },
+  appbar_image: {
+    resizeMode: 'contain',
+    height: '45%',
+    width: 120
+  },
 });

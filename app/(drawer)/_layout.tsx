@@ -30,7 +30,8 @@ const MenuContent = ({ state }: DrawerContentComponentProps) => {
     const logOut = useAuthStore(state => state.logOut);
     const mode = useThemeStore(state => state.mode);
     const updateMode = useThemeStore(state => state.updateMode);
-    const router = useRouter(); const queryClient = new QueryClient();
+    const router = useRouter();
+    const queryClient = new QueryClient();
 
     const changeTheme = () => mode === ThemeMode.dark ? updateMode(ThemeMode.light) : updateMode(ThemeMode.dark);
 
@@ -101,6 +102,7 @@ const MenuContent = ({ state }: DrawerContentComponentProps) => {
                 label='Cerrar sesión'
                 onPress={() => {
                     queryClient.clear();
+                    router.replace('/sing-in');
                     logOut();
                 }}
             />

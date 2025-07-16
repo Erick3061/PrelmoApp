@@ -1,18 +1,19 @@
 import React from 'react';
 import { Control, Controller, RegisterOptions } from 'react-hook-form';
-import { TextInput as NativeTextInput, Text, } from 'react-native';
-import { TextInput, TextInputProps } from 'react-native-paper';
+import { TextInput as NativeTextInput, } from 'react-native';
+import { Text, TextInput, TextInputProps } from 'react-native-paper';
 
 interface Props<T> extends TextInputProps {
     formInputs: T;
     name: keyof T;
     control: Control<any, any>;
+    errorColor?: string;
     rules?: RegisterOptions;
     onR?: (ref: React.ForwardedRef<NativeTextInput>) => void;
 }
 
 export const Input = <T extends object>(props: Props<T>) => {
-    const { control, name, rules } = props;
+    const { control, name, rules, errorColor } = props;
     return (
         <Controller
             control={control}
@@ -28,7 +29,7 @@ export const Input = <T extends object>(props: Props<T>) => {
                             value={value}
                             error={error ? true : false}
                         />
-                        {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
+                        {error && <Text variant='bodySmall' style={{ color: errorColor ?? 'red' }}>{error.message}</Text>}
                     </>
                 )
             }

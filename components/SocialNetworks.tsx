@@ -6,7 +6,7 @@ export const SocialNetworks = () => {
     // const iconColor: string = dark ? colors.primary : Color(colors.primary).darken(.3).toString();
     const size: number = 30;
     return (
-        <View style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', paddingVertical: 5, justifyContent: 'space-evenly', width: '100%', paddingHorizontal: 10 }}>
+        <View style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', paddingVertical: 5, justifyContent: 'space-evenly', width: '100%', paddingHorizontal: 10, marginBottom: 10 }}>
             <IconButton size={size} icon='web' onPress={() => Linking.openURL('https://pem-sa.com')} />
             <IconButton size={size} icon='facebook' onPress={() => Linking.openURL('fb://page/557351134421255')
                 .catch(() => Linking.openURL('https://www.facebook.com/PEMSA-Protecci%C3%B3n-Electr%C3%B3nica-Monterrey-SA-de-CV-557351134421255')
