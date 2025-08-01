@@ -15,7 +15,7 @@ import { Link, useRouter } from 'expo-router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from 'react-native'
-import { Button, Checkbox, IconButton, Text, TextInput, TouchableRipple } from 'react-native-paper'
+import { Button, IconButton, Switch, Text, TextInput, TouchableRipple } from 'react-native-paper'
 import Animated, { BounceIn, FadeIn } from 'react-native-reanimated'
 import AuthService from '../services/auth.service'
 
@@ -161,7 +161,7 @@ const SingIn = () => {
                 <ScrollView>
                     <Text style={{ marginVertical: 15, textAlign: 'center', fontWeight: 'bold' }} variant='headlineMedium'>¡Bienvenido!</Text>
                     <Text style={{ textAlign: 'center' }}>Ingrese sus datos para iniciar sesión</Text>
-                    <KeyboardAvoidingView style={{ flex: 1, gap: 5 }} enabled behavior={Platform.OS === "ios" ? "padding" : undefined}>
+                    <KeyboardAvoidingView style={{ flex: 1 }} enabled behavior={Platform.OS === "ios" ? "padding" : undefined}>
                         <Input
                             errorColor={mode === ThemeMode.dark ? 'lightcoral' : 'darkred'}
                             editable={(!isPending)}
@@ -177,7 +177,6 @@ const SingIn = () => {
                             style={{ backgroundColor: 'transparent' }}
                             left={<TextInput.Icon icon={'email'} />}
                         />
-
                         <Input
                             errorColor={mode === ThemeMode.dark ? 'lightcoral' : 'darkred'}
                             onR={(nextInput) => { nextInput = nextInput }}
@@ -214,10 +213,10 @@ const SingIn = () => {
                         />
 
                         <TouchableRipple style={{ marginVertical: 10 }} onPress={() => (saved === null) ? check() : deleteCheck()} >
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Checkbox
-                                    status={(saved !== null) ? 'checked' : 'unchecked'}
-                                    onPress={() => (saved === null) ? check() : deleteCheck()}
+                            <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+                                <Switch
+                                    value={(saved !== null) ? true : false}
+                                    onChange={() => (saved === null) ? check() : deleteCheck()}
                                 />
                                 <Text>Recordar contraseña</Text>
                             </View>

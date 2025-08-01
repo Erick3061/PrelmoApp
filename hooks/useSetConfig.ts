@@ -77,6 +77,11 @@ export const useSetConfig = () => {
     return (
         useEffect(() => {
             return (colorScheme === 'dark') ? updateMode(ThemeMode.dark) : updateMode(ThemeMode.light);
-        }, [colorScheme, updateMode])
+        }, [colorScheme, updateMode]),
+        useEffect(() => {
+            (async () => {
+
+            })();
+        }, [])
     )
 }

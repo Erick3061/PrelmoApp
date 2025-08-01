@@ -1,7 +1,7 @@
 import React from 'react';
 import { Control, Controller, RegisterOptions } from 'react-hook-form';
 import { TextInput as NativeTextInput, } from 'react-native';
-import { Text, TextInput, TextInputProps } from 'react-native-paper';
+import { HelperText, TextInput, TextInputProps } from 'react-native-paper';
 
 interface Props<T> extends TextInputProps {
     formInputs: T;
@@ -29,7 +29,9 @@ export const Input = <T extends object>(props: Props<T>) => {
                             value={value}
                             error={error ? true : false}
                         />
-                        {error && <Text variant='bodySmall' style={{ color: errorColor ?? 'red' }}>{error.message}</Text>}
+                        <HelperText visible={error ? true : false} type='error'>
+                            {error?.message}
+                        </HelperText>
                     </>
                 )
             }
