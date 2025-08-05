@@ -59,7 +59,7 @@ const SingIn = () => {
             logIn(data);
             router.navigate('/(drawer)');
         },
-    })
+    });
 
     const onSubmit: SubmitHandler<InputsSingIn> = useCallback(
         (data) => mutate(data),

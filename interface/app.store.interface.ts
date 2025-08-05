@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import { Account } from './hooks.interface';
 // import { BIOMETRY_TYPE } from 'react-native-keychain';
 
 /**Enums */
@@ -30,6 +31,7 @@ export interface AppActions {
     updateIsCompatible: (isCompatible: boolean) => void;
     setSaved: (saved: Saved | null) => void;
     updateFE: (fe: boolean) => void;
+    updateAccounts: (accounts: Account[]) => void;
 }
 
 export interface AppStore extends AppActions {
@@ -42,4 +44,6 @@ export interface AppStore extends AppActions {
     screenWidth: number;
     firstEntry: boolean;
     isCompatible: boolean;
+    accountsSelected: Account[];
+    // groupsSelected: Group[];
 }

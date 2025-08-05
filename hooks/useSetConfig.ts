@@ -41,7 +41,7 @@ export const useSetConfig = () => {
         const Err = error as AxiosError;
         if (Err.response?.status === 401 && JSON.stringify(Err.response.data).includes("La sesión expiro, inicie sesión nuevamente")) {
             try {
-                const user = await AuthService.checkAuth(refreshToken ?? 'without token');
+                const user = await AuthService.CheckAuth(refreshToken ?? 'without token');
                 logIn(user);
             } catch (error) {
                 return Promise.reject(error);

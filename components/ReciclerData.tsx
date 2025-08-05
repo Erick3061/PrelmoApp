@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import { Pressable, RefreshControl, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 // import { DataProvider, LayoutProvider } from 'recyclerlistview';
@@ -42,7 +42,7 @@ export const ReciclerData = <T extends object>(props: Props<T>) => {
                     // pressed && { backgroundColor: Color(colors.primary).fade(.8).toString() }
                 ]}
             >
-                <Animated.View entering={FadeInRight.delay(index * 50)}>
+                <Animated.View entering={FadeInRight.delay(index * 20)}>
                     <Text variant='labelMedium' style={{ padding: 15 }}>{`${item[labelField]}`}</Text>
                 </Animated.View>
             </Pressable>
@@ -50,24 +50,20 @@ export const ReciclerData = <T extends object>(props: Props<T>) => {
     }, [_onSelect, labelField, selected, valueField]);
 
     return (
-        <View style={{ flex: 1 }}>
-            {
-                data.length === 0
-                    ? <Text>Sin coincidencias</Text>
-                    :
-                    <FlashList
-                        data={data}
-                        renderItem={_renderRow}
-                        estimatedItemSize={data.length}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={loading}
-                                onRefresh={onRefresh}
-                            />
-                        }
+        data.length === 0
+            ? <Text>Sin coincidencias</Text>
+            :
+            <FlashList
+                data={data}
+                renderItem={_renderRow}
+                estimatedItemSize={data.length}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={loading}
+                        onRefresh={onRefresh}
                     />
-            }
-        </View>
+                }
+            />
     )
 };
 

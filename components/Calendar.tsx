@@ -91,7 +91,6 @@ const Calendar = (props: Props) => {
                 :
                 (calendarSelected !== undefined) &&
                 <DateTimePicker
-                    display={'default'}
                     value={dates.find(f => f.name === calendarSelected)?.date?.DATE ?? new Date()}
                     mode={'date'}
                     minimumDate={limitDays ? modDate({ dateI: new Date(), addDay: -limitDays }).DATE : undefined}
@@ -102,6 +101,7 @@ const Calendar = (props: Props) => {
                             onSelect({ name: calendarSelected, date });
                         }
                     }}
+                    style={{ outlineColor: 'red' }}
                 />
         return undefined;
     }, [calendarSelected, dates, orientation, limitDays, setCalendar, onSelect])

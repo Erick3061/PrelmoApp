@@ -7,7 +7,7 @@ class AuthService {
     return data;
   }
 
-  static checkAuth = async (refreshToken?: string): Promise<User> => {
+  static CheckAuth = async (refreshToken?: string): Promise<User> => {
     if (refreshToken) {
       const { data } = await useAppStore.getState().instance.get<User>('auth/check-auth', { headers: { Authorization: `Bearer ${refreshToken}` } });
       return data;

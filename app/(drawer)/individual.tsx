@@ -6,13 +6,14 @@ import { formatDate } from '@/interface/helpers.interface';
 import { TypeReport } from '@/interface/hooks.interface';
 import { ThemeMode } from '@/interface/theme.store.interface';
 import useAppStore from '@/utils/app.store';
+import useNotificationStore from '@/utils/notification.store';
 import useThemeStore from '@/utils/theme.store';
 import { useRouter } from 'expo-router';
 import Drawer from 'expo-router/drawer';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
-import { Button, Dialog, IconButton, Portal, Switch, Text, TouchableRipple } from 'react-native-paper';
+import { Button, Dialog, IconButton, Portal, Switch, Text, TextInput, TouchableRipple } from 'react-native-paper';
 
 const calendars = [
     { label: 'Fecha inicio', date: modDate({ dateI: new Date(), addDay: -30 }).DATE },
@@ -31,8 +32,10 @@ interface Account {
 
 const Individual = () => {
     const { control, handleSubmit, reset, setValue: setValueForm, formState } = useForm<Account>({ defaultValues: { name: '', report: '' } });
-
     const orientation = useAppStore(store => store.orientation);
+    const accountsSelected = useAppStore(store => store.accountsSelected);
+    const updateAccounts = useAppStore(store => store.updateAccounts);
+    const handleError = useNotificationStore(state => state.handleError);
     const [isSelected, setIsSelected] = useState(false);
     const [isShow, setIsShow] = useState<boolean>(false);
     const [report, setReport] = useState<typeof reports>();
@@ -42,23 +45,25 @@ const Individual = () => {
 
     const router = useRouter();
 
-
     const onSubmit: SubmitHandler<Account> = async (props) => {
-        // if (dates && accountsSelected.length > 0 && report) {
-        //     const missingDates = dates.filter(s => s.date === undefined).map(name => name.name);
-        //     if (missingDates?.length === 0) {
-        //         const start = dates.find(f => f.name === 'Fecha inicio')?.date?.date.date ?? modDate({}).date.date;
-        //         const end = dates.find(f => f.name === 'Fecha final')?.date?.date.date ?? modDate({}).date.date;
-        //         stack.navigate('ResultAccountScreen', { account: accountsSelected[0], end, report: report[0].value, start, keys: getKeys(report[0].value), typeAccount: 1, filter: isSelected });
-        //     } else {
-        //         notification({
-        //             type: 'error',
-        //             title: 'Error al asignar Fechas',
-        //             text: `Fechas faltantes:\n${missingDates}`
-        //         });
-        //     }
-        // }
+        if (dates && accountsSelected.length > 0 && report) {
+            const missingDates = dates.filter(s => s.date === undefined).map(name => name.name);
+            if (missingDates?.length === 0) {
+                const start = dates.find(f => f.name === 'Fecha inicio')?.date?.date.date ?? modDate({ dateI: new Date() }).date.date;
+                const end = dates.find(f => f.name === 'Fecha final')?.date?.date.date ?? modDate({ dateI: new Date() }).date.date;
+                // stack.navigate('ResultAccountScreen', { account: accountsSelected[0], end, report: report[0].value, start, keys: getKeys(report[0].value), typeAccount: 1, filter: isSelected });
+            } else
+                handleError(`Fechas faltantes:\n${missingDates}`);
+        }
     };
+
+    useEffect(() => {
+        if (accountsSelected.length > 0) {
+            setValueForm('name', accountsSelected[0].Nombre);
+        } else {
+            setValueForm('name', '');
+        }
+    }, [accountsSelected, setValueForm]);
 
     const DialogRender = (
         <Portal>
@@ -78,6 +83,46 @@ const Individual = () => {
             </Dialog>
         </Portal>
     )
+
+    const goToSearch = useCallback(
+        () => {
+            if (accountsSelected.length > 1) updateAccounts(accountsSelected.slice(0, 1));
+            router.push({ pathname: '/list-account', params: { type: 'Account' } })
+        },
+        [accountsSelected, router, updateAccounts],
+    )
+
+
+
+    const _renderSelectAccount = useCallback(() => {
+        return (
+            <Controller
+                control={control}
+                rules={{ required: { message: 'Debe seleccionar una cuenta', value: true } }}
+                name='name'
+                render={({ field: { value, onChange }, fieldState: { error } }) =>
+                    <>
+                        <TextInput
+                            mode='outlined'
+                            value={value}
+                            label={'Seleccione una cuenta'}
+                            placeholder={'Seleccione una cuenta'}
+                            showSoftInputOnFocus={false}
+                            right={
+                                <TextInput.Icon
+                                    icon={value !== '' ? 'close' : 'menu-down'}
+                                    forceTextInputFocus={false}
+                                    onPress={(value !== '') ? () => updateAccounts([]) : goToSearch}
+                                />
+                            }
+                            onPressIn={goToSearch}
+                        />
+                        {error && <Text variant='bodySmall' style={[{ marginLeft: 15, color: mode === ThemeMode.dark ? 'lightcoral' : 'darkred' }]}>{error.message}</Text>}
+                    </>
+                }
+            />
+        )
+    }, [control, goToSearch, mode, updateAccounts]);
 
     const _renderSelectReport = useCallback(() => {
         if (reports) {
@@ -125,9 +170,7 @@ const Individual = () => {
                     <ScrollView>
                         {
                             <KeyboardAvoidingView>
-                                {/* 
                                 {_renderSelectAccount()}
-                                */}
                                 {_renderSelectReport()}
                                 <View style={[
                                     orientation === Orientation.landscape && {

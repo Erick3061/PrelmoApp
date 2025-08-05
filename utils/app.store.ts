@@ -14,12 +14,14 @@ const appStore: StateCreator<AppStore> = (set, get) => ({
     screenWidth: 0,
     firstEntry: true,
     isCompatible: false,
+    accountsSelected: [],
     setInstance: (instance: AxiosInstance) => { set({ instance }) },
     setOrientation: (orientation: Orientation) => { set({ orientation }) },
     setScreen: ({ height, width }: { height: number, width: number }) => { set({ screenHeight: height, screenWidth: width }) },
     updateIsCompatible: (isCompatible: boolean) => { set({ isCompatible }) },
     setSaved: (saved: Saved | null) => { set({ saved }) },
-    updateFE: (firstEntry: boolean) => { set({ firstEntry }) }
+    updateFE: (firstEntry: boolean) => { set({ firstEntry }) },
+    updateAccounts: (accounts) => set(state => ({ ...state, accountsSelected: accounts }))
 });
 
 const useAppStore = create<AppStore>()(
