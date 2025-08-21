@@ -29,9 +29,15 @@ export const Input = <T extends object>(props: Props<T>) => {
                             value={value}
                             error={error ? true : false}
                         />
-                        <HelperText visible={error ? true : false} type='error'>
-                            {error?.message}
-                        </HelperText>
+                        {error && (
+                            <HelperText
+                                type='error'
+                                visible={true}
+                                style={{ color: errorColor || 'red' }}
+                            >
+                                {error.message}
+                            </HelperText>
+                        )}
                     </>
                 )
             }

@@ -1,10 +1,9 @@
-import React, { useCallback } from 'react';
-import { Pressable, RefreshControl, StyleSheet } from 'react-native';
-import { Text } from 'react-native-paper';
-import Animated, { FadeInRight } from 'react-native-reanimated';
-// import { DataProvider, LayoutProvider } from 'recyclerlistview';
+import useThemeStore from '@/utils/theme.store';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
-
+import React, { useCallback } from 'react';
+import { RefreshControl } from 'react-native';
+import { Divider, Text } from 'react-native-paper';
+import Animated, { FadeInRight } from 'react-native-reanimated';
 
 interface Props<T> {
     data: T[];
@@ -20,6 +19,7 @@ interface Props<T> {
 }
 
 export const ReciclerData = <T extends object>(props: Props<T>) => {
+    const theme = useThemeStore(store => store.theme);
     const { data, labelField, valueField, selected, onChange, loading = false, onRefresh } = props;
 
     const _onSelect = useCallback((item: T) => {
@@ -29,25 +29,25 @@ export const ReciclerData = <T extends object>(props: Props<T>) => {
     const _renderRow = useCallback(({ index, item }: ListRenderItemInfo<T>) => {
         const isSelected = selected.find(f => f[valueField] === item[valueField]);
         return (
-            <Pressable
-                onPress={() => _onSelect(item)}
-                style={({ pressed }) => [
-                    styles.item,
-                    {
+            <>
+                <Animated.Text
+                    entering={FadeInRight.delay(index)}
+                    style={{
+                        padding: 15,
+                        backgroundColor: isSelected ? theme.colors.primaryContainer : theme.colors.surface,
+                        color: isSelected ? theme.colors.onPrimaryContainer : theme.colors.onSurface,
+                        borderRadius: 10,
+                        height: props.height || 50,
                         marginVertical: 2,
-                        marginHorizontal: 10,
-                        borderBottomWidth: .3,
-                    },
-                    // isSelected && { backgroundColor: colors.primaryContainer },
-                    // pressed && { backgroundColor: Color(colors.primary).fade(.8).toString() }
-                ]}
-            >
-                <Animated.View entering={FadeInRight.delay(index * 20)}>
-                    <Text variant='labelMedium' style={{ padding: 15 }}>{`${item[labelField]}`}</Text>
-                </Animated.View>
-            </Pressable>
+                    }}
+                    onPress={() => _onSelect(item)}
+                >
+                    {`${item[labelField]}`}
+                </Animated.Text>
+                {index < data.length - 1 && <Divider />}
+            </>
         )
-    }, [_onSelect, labelField, selected, valueField]);
+    }, [_onSelect, data.length, labelField, props.height, selected, theme.colors.onPrimaryContainer, theme.colors.onSurface, theme.colors.primaryContainer, theme.colors.surface, valueField]);
 
     return (
         data.length === 0
@@ -66,10 +66,3 @@ export const ReciclerData = <T extends object>(props: Props<T>) => {
             />
     )
 };
-
-const styles = StyleSheet.create({
-    item: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-});

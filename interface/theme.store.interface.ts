@@ -25,7 +25,8 @@ export interface ThemeActions {
     // updateColor: (primary: string) => void;
 }
 
-export interface ThemeState extends ThemeActions {
+export interface ThemeState<T> extends ThemeActions {
     // colors: ThemeColors;
     mode: ThemeMode;
+    theme: T;
 }

@@ -1,4 +1,3 @@
-import { style } from '@/app/_layout'
 import { Input } from '@/components/Input'
 import Loading from '@/components/Loading'
 import { SocialNetworks } from '@/components/SocialNetworks'
@@ -11,7 +10,7 @@ import useNotificationStore from '@/utils/notification.store'
 import useThemeStore from '@/utils/theme.store'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
-import { Link, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from 'react-native'
@@ -57,7 +56,7 @@ const SingIn = () => {
             if (data.termsAndConditions) { }
             else router.navigate('/tcap', {});
             logIn(data);
-            router.navigate('/(drawer)');
+            router.replace('/(drawer)');
         },
     });
 
@@ -155,13 +154,13 @@ const SingIn = () => {
 
     return (
         <>
-            <Animated.View entering={FadeIn.delay(350).duration(400)} style={[style.container, { paddingHorizontal: '7%', justifyContent: 'center' }]} >
+            <Animated.View entering={FadeIn.delay(350).duration(400)} style={[{ paddingHorizontal: '7%', justifyContent: 'center', flex: 1 }]} >
                 <Loading refresh={true} />
                 <View style={{ flex: 1 }} />
                 <ScrollView>
-                    <Text style={{ marginVertical: 15, textAlign: 'center', fontWeight: 'bold' }} variant='headlineMedium'>¡Bienvenido!</Text>
-                    <Text style={{ textAlign: 'center' }}>Ingrese sus datos para iniciar sesión</Text>
-                    <KeyboardAvoidingView style={{ flex: 1 }} enabled behavior={Platform.OS === "ios" ? "padding" : undefined}>
+                    <Text style={{ marginVertical: 15, textAlign: 'center' }} variant='headlineLarge'>Bienvenido</Text>
+                    <Text style={{ textAlign: 'center', marginBottom: 15 }}>Ingrese sus datos, para iniciar sesión.</Text>
+                    <KeyboardAvoidingView style={{ flex: 1, gap: 5 }} enabled behavior={Platform.OS === "ios" ? "padding" : undefined}>
                         <Input
                             errorColor={mode === ThemeMode.dark ? 'lightcoral' : 'darkred'}
                             editable={(!isPending)}
@@ -176,6 +175,7 @@ const SingIn = () => {
                             autoCapitalize='none'
                             style={{ backgroundColor: 'transparent' }}
                             left={<TextInput.Icon icon={'email'} />}
+                            mode='outlined'
                         />
                         <Input
                             errorColor={mode === ThemeMode.dark ? 'lightcoral' : 'darkred'}
@@ -192,6 +192,7 @@ const SingIn = () => {
                             onSubmitEditing={handleSubmit(onSubmit)}
                             returnKeyType='next'
                             autoCapitalize='none'
+                            mode='outlined'
                             onChange={async ({ nativeEvent: { text } }) => {
                                 if ((isCompatible && saved === Saved.saveBiometry && getted) && text !== '') {
                                     setIsChanged(true);
@@ -243,18 +244,8 @@ const SingIn = () => {
                                 </Animated.View>
                         }
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end', marginVertical: 5 }}>
-                            {/* <TouchableOpacity
-                                    onPress={() => { }
-                                        navigation.navigate('PdfScreen', {
-                                            name: 'Registro', url: `${domain.replace('/v1', '')}/docs/REGISTRO-PLATAFORMA.pdf`
-                                        })
-                                    }
-                                    disabled={isPending} >
-                                    <Text variant='titleSmall' style={[{ textAlign: 'center', marginVertical: 10 }]}>Regístrate</Text>
-                                </TouchableOpacity> */}
-
                             <TouchableOpacity onPress={() =>
-                                Alert.alert('Alerta', 'Contacta a tu titular para recuperar tu contraseña', [], { cancelable: true })
+                                Alert.alert('Reinicio de contraseña', 'Comunicate con tu titular para realizar el proceso de reinicio de contraseña.', [], { cancelable: true })
                             }
                                 disabled={isPending} >
                                 <Text variant='titleSmall' style={[{ textAlign: 'center', marginVertical: 10 }]} >Olvidé mi contraseña</Text>
@@ -262,9 +253,6 @@ const SingIn = () => {
                         </View>
                     </KeyboardAvoidingView>
                 </ScrollView>
-                <Link href={"/tcap"} style={{ marginVertical: 15 }}>
-                    <Text variant='titleSmall' style={{ textAlign: 'center', fontWeight: 'bold' }}>Términos, condiciones y aviso de privacidad</Text>
-                </Link>
                 <SocialNetworks />
             </Animated.View>
         </>

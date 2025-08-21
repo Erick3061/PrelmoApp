@@ -1,7 +1,7 @@
 import { ThemeMode } from '@/interface/theme.store.interface';
 import useAppStore from '@/utils/app.store';
 import useThemeStore from '@/utils/theme.store';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Keyboard, LayoutRectangle, TextInput as NativeTextInput, Pressable, StyleSheet, View } from 'react-native';
 import { Portal, Surface, TextInput } from 'react-native-paper';
 import { ReciclerData } from './ReciclerData';
@@ -29,29 +29,12 @@ export const Select = <T extends object>(props: Props<T>) => {
         maxHeight,
     } = props;
 
-    const heightOption: number = 40;
     const ref = useRef<View>(null);
     const search = useRef<NativeTextInput>(null);
     const [visible, setVisible] = useState<boolean>(false);
     const [layout, setLayout] = useState<LayoutRectangle>();
-    const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
     const mode = useThemeStore(store => store.mode);
-    const orientation = useAppStore(store => store.orientation);
     const screenHeight = useAppStore(store => store.screenHeight);
-
-
-    useEffect(() => {
-        const keyboardOpen = Keyboard.addListener('keyboardDidShow', (event) => {
-            setKeyboardHeight(event.endCoordinates.height);
-        })
-        const keyboardClose = Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboardHeight(0);
-        })
-        return () => {
-            keyboardOpen.remove();
-            keyboardClose.remove();
-        }
-    }, []);
 
     const _close = useCallback(() => {
         if (visible) setVisible(false);
@@ -108,6 +91,7 @@ export const Select = <T extends object>(props: Props<T>) => {
     const _renderModal = useCallback(() => {
         let top: number | undefined = (maxHeight ?? 0) + (layout?.y ?? 0) * 2 + 15;
         if (top === 0 || (screenHeight - (top + (maxHeight ?? 0)) < 100)) { top = undefined }
+
         return (
             <Portal>
                 {
@@ -119,8 +103,8 @@ export const Select = <T extends object>(props: Props<T>) => {
                             height: maxHeight ?? '100%',
                             width: layout?.width ?? '90%',
                             position: 'absolute',
-                            top,
-                            elevation: 4
+                            elevation: 4,
+                            top
                         }}>
                             <ReciclerData
                                 data={data}
@@ -148,6 +132,6 @@ export const Select = <T extends object>(props: Props<T>) => {
 const modal = StyleSheet.create({
     Modal: {
         flex: 1,
-        alignItems: 'center',
+        alignItems: 'center'
     }
 });

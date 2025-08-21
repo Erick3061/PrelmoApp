@@ -53,7 +53,7 @@ const StackComponent = () => {
             <Stack.Protected guard>
                 <Stack.Screen name="sing-in" options={{ header: Header }} />
                 <Stack.Screen name="tcap" options={{ presentation: 'modal', animation: 'fade', title: 'Términos, condiciones y aviso de privacidad' }} />
-                <Stack.Screen name="list-account" options={{ presentation: 'modal', title: 'Buscar' }} />
+                <Stack.Screen name="list-account" options={{ presentation: 'modal', title: 'Buscar', animation: 'fade' }} />
                 <Stack.Screen name="+not-found" />
             </Stack.Protected>
         </Stack>

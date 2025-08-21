@@ -10,6 +10,7 @@ import { Text } from 'react-native-paper';
 const Index = () => {
     const orientation = useAppStore(state => state.orientation);
     const mode = useThemeStore(state => state.mode);
+    const theme = useThemeStore(state => state.theme);
     return (
         <View style={[
             { flex: 1, justifyContent: 'space-around' },
@@ -26,7 +27,7 @@ const Index = () => {
                 <Image
                     style={[
                         { resizeMode: 'contain', width: '70%', height: '20%', alignSelf: 'center' },
-                        mode === ThemeMode.dark && { tintColor: 'gray' }
+                        mode === ThemeMode.dark ? { tintColor: theme.colors.onSurface } : { tintColor: theme.colors.primary }
                     ]}
                     source={require('../../assets/images/prelmo2.png')}
                 />
@@ -34,10 +35,10 @@ const Index = () => {
             <View style={[
                 { flex: 1, justifyContent: 'center', alignItems: 'center' }
             ]}>
+                <Text variant='labelLarge'>By PEMSA development</Text>
+                <SocialNetworks />
                 <Text variant='titleMedium'>central monitoreo 24hrs</Text>
                 <Text variant='titleMedium'>222 141 12 30</Text>
-                <SocialNetworks />
-                <Text variant='labelLarge'>By PEMSA development</Text>
             </View>
         </View>
     )

@@ -1,3 +1,4 @@
+import { Orientation } from "@/interface/app.store.interface";
 import { ThemeMode } from "@/interface/theme.store.interface";
 import useAppStore from "@/utils/app.store";
 import useAuthStore from "@/utils/auth.store";
@@ -5,7 +6,7 @@ import useThemeStore from "@/utils/theme.store";
 import { AxiosError } from "axios";
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useEffect } from "react";
-import { useColorScheme } from 'react-native';
+import { Dimensions, useColorScheme } from 'react-native';
 import AuthService from "../services/auth.service";
 
 export const useSetConfig = () => {
@@ -51,14 +52,15 @@ export const useSetConfig = () => {
         return Promise.reject(error);
     });
 
-    // const { width, height } = Dimensions.get('screen');
-    // if (height >= width) {
-    //     setOrientation(Orientation.portrait);
-    //     setScreen({ height, width });
-    // } else {
-    //     setOrientation(Orientation.landscape);
-    //     setScreen({ height: width, width: height });
-    // }
+    const { width, height } = Dimensions.get('screen');
+
+    if (height >= width) {
+        setOrientation(Orientation.portrait);
+        setScreen({ height, width });
+    } else {
+        setOrientation(Orientation.landscape);
+        setScreen({ height: width, width: height });
+    }
 
     biometric();
 

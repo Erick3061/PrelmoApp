@@ -51,6 +51,7 @@ const MenuContent = ({ state }: DrawerContentComponentProps) => {
                 icon={'home'}
                 active={(routeNames[index] === 'index') && true}
                 onPress={() => router.navigate('/(drawer)')}
+                style={{ marginTop: 10 }}
             />
             <DP.Section title='Consultas'>
                 <DP.Item
@@ -87,7 +88,7 @@ const MenuContent = ({ state }: DrawerContentComponentProps) => {
                 />
                 <DP.Item
                     active={routeNames[index] === 'about' && true}
-                    icon={'help'}
+                    icon={'information-variant'}
                     label="Acerca de Prelmo"
                     onPress={() => router.navigate('/(drawer)/about')}
                 />
