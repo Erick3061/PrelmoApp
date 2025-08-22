@@ -1,7 +1,9 @@
 import { useReportProps } from "@/interface/hooks.interface";
+import ReportService from "@/services/reports.service";
+import useNotificationStore from "@/utils/notification.store";
+import { useQuery } from "@tanstack/react-query";
 
 export function useReport({ accounts, dateEnd, dateStart, key, type, typeAccount }: useReportProps) {
-    // const { ReportEvents } = useContext(RequestContext);
     // const { handleError } = useContext(NotificationContext);
     // const AppDispatch = useAppDispatch();
     // const queryclient = useQueryClient();
@@ -16,4 +18,16 @@ export function useReport({ accounts, dateEnd, dateStart, key, type, typeAccount
     //         handleError(String(error) + '\n' + Err.message);
     //     },
     // })
+
+    const handleError = useNotificationStore(state => state.handleError);
+
+
+    const query = useQuery({
+        queryKey: ['Events', key, type, dateStart, dateEnd],
+        queryFn: () => ReportService.ReportEvents({ type, body: { accounts, dateStart, dateEnd, typeAccount } }) // Placeholder function
+    });
+
+    if (query.isError) handleError(query.error.message);
+
+    return query;
 }

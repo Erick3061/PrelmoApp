@@ -1,6 +1,6 @@
 import Calendar from '@/components/Calendar';
 import { Select } from '@/components/Select';
-import { modDate } from '@/helper/functions';
+import { getKeys, modDate } from '@/helper/functions';
 import { Orientation } from '@/interface/app.store.interface';
 import { formatDate } from '@/interface/helpers.interface';
 import { TypeReport } from '@/interface/hooks.interface';
@@ -13,7 +13,7 @@ import Drawer from 'expo-router/drawer';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
-import { Button, Dialog, IconButton, Portal, Switch, Text, TextInput, TouchableRipple } from 'react-native-paper';
+import { Button, Dialog, IconButton, Portal, Text, TextInput } from 'react-native-paper';
 
 const calendars = [
     { label: 'Fecha inicio', date: modDate({ dateI: new Date(), addDay: -30 }).DATE },
@@ -36,7 +36,6 @@ const Individual = () => {
     const accountsSelected = useAppStore(store => store.accountsSelected);
     const updateAccounts = useAppStore(store => store.updateAccounts);
     const handleError = useNotificationStore(state => state.handleError);
-    const [isSelected, setIsSelected] = useState(false);
     const [isShow, setIsShow] = useState<boolean>(false);
     const [report, setReport] = useState<typeof reports>();
     const [dates, setDates] = useState<{ name: string, date?: formatDate }[]>();
@@ -48,10 +47,10 @@ const Individual = () => {
     const onSubmit: SubmitHandler<Account> = async (props) => {
         if (dates && accountsSelected.length > 0 && report) {
             const missingDates = dates.filter(s => s.date === undefined).map(name => name.name);
-            if (missingDates?.length === 0) {
+            if (missingDates?.length === 0 && report.length > 0 && accountsSelected.length > 0) {
                 const start = dates.find(f => f.name === 'Fecha inicio')?.date?.date.date ?? modDate({ dateI: new Date() }).date.date;
                 const end = dates.find(f => f.name === 'Fecha final')?.date?.date.date ?? modDate({ dateI: new Date() }).date.date;
-                // stack.navigate('ResultAccountScreen', { account: accountsSelected[0], end, report: report[0].value, start, keys: getKeys(report[0].value), typeAccount: 1, filter: isSelected });
+                router.push({ pathname: '/result-account', params: { account: JSON.stringify(accountsSelected[0]), end, start, report: report[0].value, typeAccount: 1, keys: JSON.stringify(getKeys(report[0].value)) } });
             } else
                 handleError(`Fechas faltantes:\n${missingDates}`);
         }
@@ -179,17 +178,6 @@ const Individual = () => {
                                         alignItems: 'center'
                                     }
                                 ]}>
-                                    <TouchableRipple onPress={() => setIsSelected(!isSelected)}>
-                                        <View style={[
-                                            {
-                                                flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-                                                paddingVertical: 10, paddingHorizontal: 5
-                                            }
-                                        ]}>
-                                            <Text variant='labelLarge'>Filtar eventos</Text>
-                                            <Switch onChange={() => setIsSelected(!isSelected)} value={isSelected} />
-                                        </View>
-                                    </TouchableRipple>
                                     <View style={[
                                         orientation === Orientation.landscape && {
                                             flexDirection: 'row',

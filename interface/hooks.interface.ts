@@ -17,6 +17,7 @@ export enum BatteryStatus {
 /**Types */
 export type TypeReport = 'ap-ci' | 'event-alarm' | 'batery' | 'state' | 'apci-week';
 export type typeAccount = number;
+export type filterEvents = "ALL" | "AP" | "CI" | "APCI" | "Alarm" | "Prue" | "Bat" | "otros";
 
 
 /**Interfaces */
@@ -91,4 +92,19 @@ export interface GetReport {
     typeAccount: typeAccount;
     dateStart?: string;
     dateEnd?: string;
+}
+
+export interface Key<T> {
+    label: string,
+    key: keyof T | (keyof T)[],
+    size?: number,
+    center?: boolean
+}
+
+export interface ResponseReport {
+    nombre: string;
+    cuentas?: Account[] | undefined;
+    fechas?: string[] | undefined;
+    total?: number | undefined;
+    percentajes?: Percentajes | undefined;
 }

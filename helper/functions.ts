@@ -1,4 +1,5 @@
 import { formatDate } from "@/interface/helpers.interface";
+import { Events, Key, TypeReport } from "@/interface/hooks.interface";
 
 interface ModDate {
     dateI: Date;
@@ -18,7 +19,7 @@ interface ModDate {
 function parseDateParts(date: Date) {
     const formatted = new Intl.DateTimeFormat("es-MX").format(date);
     const [day, month, year] = formatted.split('/').map(Number);
-    return { day, month, year, formatted };
+    return { day, month, year, formatted: year + '-' + month.toString().padStart(2, '0') + '-' + day.toString().padStart(2, '0') };
 }
 
 function parseTimeParts(date: Date) {
@@ -61,4 +62,103 @@ export const modDate = (params: ModDate): formatDate => {
     if (Seconds !== undefined) newDate.setSeconds(Seconds);
     if (Year !== undefined) newDate.setFullYear(Year);
     return getDate(newDate);
+};
+
+export const getKeys: (report: TypeReport) => Key<Events>[] = report => {
+    return report === 'ap-ci'
+        ? [
+            {
+                label: 'Fecha - Hora',
+                key: ['FechaOriginal', 'Hora'],
+                size: 115,
+                center: true,
+            },
+            {
+                label: 'Partición',
+                key: 'Particion',
+                size: 73,
+                center: true,
+            },
+            {
+                label: 'Evento',
+                key: 'DescripcionEvent',
+                size: 120,
+                center: true,
+            },
+            {
+                label: 'Usuario',
+                key: 'CodigoUsuario',
+                size: 62,
+                center: true,
+            },
+            {
+                label: 'Nombre usuario',
+                key: 'NombreUsuario',
+                size: 300,
+                center: true,
+            },
+        ]
+        : report === 'event-alarm'
+            ? [
+                {
+                    label: 'Fecha - Hora',
+                    key: ['FechaOriginal', 'Hora'],
+                    size: 115,
+                    center: true,
+                },
+                {
+                    label: 'Partición',
+                    key: 'Particion',
+                    size: 73,
+                    center: true,
+                },
+                {
+                    label: 'Evento',
+                    key: 'DescripcionEvent',
+                    size: 120,
+                    center: true,
+                },
+                {
+                    label: 'Usuario',
+                    key: 'CodigoUsuario',
+                    size: 62,
+                    center: true,
+                },
+                {
+                    label: 'Zona',
+                    key: 'CodigoZona',
+                    size: 40,
+                    center: true,
+                },
+                {
+                    label: 'Nombre',
+                    key: ['NombreUsuario', 'DescripcionZona'],
+                    size: 300,
+                    center: true,
+                },
+            ]
+            : report === 'apci-week'
+                ? []
+                : report === 'state'
+                    ? [
+                        {
+                            label: 'Fecha Hora',
+                            key: ['FechaOriginal', 'Hora'],
+                            size: 200,
+                            center: true,
+                        },
+                        {
+                            label: 'Estado',
+                            key: 'DescripcionAlarm',
+                            size: 200,
+                            center: true,
+                        },
+                        {
+                            label: 'Usuario',
+                            key: 'NombreUsuario',
+                            size: 200,
+                            center: true,
+                        },
+                    ]
+                    : [];
 };

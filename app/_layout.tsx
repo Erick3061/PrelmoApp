@@ -5,9 +5,11 @@ import { ThemeMode } from '@/interface/theme.store.interface';
 import useThemeStore from '@/utils/theme.store';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import * as Clipboard from "expo-clipboard";
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { PaperProvider } from 'react-native-paper';
+import { DevToolsBubble } from "react-native-react-query-devtools";
 import 'react-native-reanimated';
 
 export default function RootLayout() {
@@ -19,6 +21,15 @@ export default function RootLayout() {
 
   if (!loaded) return null;
 
+  const onCopy = async (text: string) => {
+    try {
+      await Clipboard.setStringAsync(text);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <PaperProvider theme={theme}>
@@ -28,6 +39,7 @@ export default function RootLayout() {
           <StatusBar style={mode === ThemeMode.dark ? 'light' : 'dark'} />
         </ThemeProvider>
       </PaperProvider>
+      <DevToolsBubble onCopy={onCopy} queryClient={queryClient} />
     </QueryClientProvider >
   );
 }
