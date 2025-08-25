@@ -5,6 +5,7 @@ import { Account } from '@/interface/hooks.interface';
 import UserService from '@/services/user.service';
 import useAppStore from '@/utils/app.store';
 import useNotificationStore from '@/utils/notification.store';
+import useThemeStore from '@/utils/theme.store';
 import { useQuery } from '@tanstack/react-query';
 import { useGlobalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -18,6 +19,7 @@ const ListAccount = () => {
     const accountsSelected = useAppStore(state => state.accountsSelected);
     const updateAccounts = useAppStore(state => state.updateAccounts);
     const handleError = useNotificationStore(state => state.handleError);
+    const theme = useThemeStore(state => state.theme);
 
     const debaucedValue = useDebouncedValue(textQueryValue, 300);
 
@@ -34,7 +36,6 @@ const ListAccount = () => {
 
     const Search = () => (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
             <Searchbar
                 style={{ marginVertical: 10, marginHorizontal: 10, flex: 1 }}
                 placeholder="Buscar cuenta"
@@ -80,8 +81,7 @@ const ListAccount = () => {
     }, [data, textQueryValue]);
 
     return (
-
-        <View style={{ flex: 1, padding: 10 }}>
+        <View style={{ flex: 1, padding: 10, backgroundColor: theme.colors.background }}>
             <Loading loading={isLoading} />
             {Search()}
             <ReciclerData

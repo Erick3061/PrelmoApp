@@ -107,6 +107,7 @@ const Individual = () => {
                             label={'Seleccione una cuenta'}
                             placeholder={'Seleccione una cuenta'}
                             showSoftInputOnFocus={false}
+                            caretHidden
                             right={
                                 <TextInput.Icon
                                     icon={value !== '' ? 'close' : 'menu-down'}
