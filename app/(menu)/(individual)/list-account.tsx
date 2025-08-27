@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { IconButton, Searchbar } from 'react-native-paper';
 
-const ListAccount = () => {
+export default function ListAccount() {
     const [filter, setFilter] = useState<Account[]>([]);
     const [textQueryValue, setTextQueryValue] = useState<string>('');
 
@@ -96,5 +96,3 @@ const ListAccount = () => {
         </View>
     )
 }
-
-export default ListAccount

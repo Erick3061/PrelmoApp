@@ -8,7 +8,8 @@ import { ThemeMode } from '@/interface/theme.store.interface';
 import useAppStore from '@/utils/app.store';
 import useNotificationStore from '@/utils/notification.store';
 import useThemeStore from '@/utils/theme.store';
-import { useRouter } from 'expo-router';
+import { DrawerActions } from '@react-navigation/native';
+import { useNavigation, useRouter } from 'expo-router';
 import Drawer from 'expo-router/drawer';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -30,7 +31,7 @@ interface Account {
     end: string;
 }
 
-const Individual = () => {
+export default function IndividualIndex() {
     const { control, handleSubmit, reset, setValue: setValueForm, formState } = useForm<Account>({ defaultValues: { name: '', report: '' } });
     const orientation = useAppStore(store => store.orientation);
     const accountsSelected = useAppStore(store => store.accountsSelected);
@@ -43,6 +44,7 @@ const Individual = () => {
     const mode = useThemeStore(state => state.mode);
 
     const router = useRouter();
+    const navigation = useNavigation();
 
     const onSubmit: SubmitHandler<Account> = async (props) => {
         if (dates && accountsSelected.length > 0 && report) {
@@ -50,7 +52,7 @@ const Individual = () => {
             if (missingDates?.length === 0 && report.length > 0 && accountsSelected.length > 0) {
                 const start = dates.find(f => f.name === 'Fecha inicio')?.date?.date.date ?? modDate({ dateI: new Date() }).date.date;
                 const end = dates.find(f => f.name === 'Fecha final')?.date?.date.date ?? modDate({ dateI: new Date() }).date.date;
-                router.push({ pathname: '/result-account', params: { account: JSON.stringify(accountsSelected[0]), end, start, report: report[0].value, typeAccount: 1, keys: JSON.stringify(getKeys(report[0].value)) } });
+                router.push({ pathname: '/(menu)/(individual)/result-account', params: { account: JSON.stringify(accountsSelected[0]), end, start, report: report[0].value, typeAccount: 1, keys: JSON.stringify(getKeys(report[0].value)) } });
             } else
                 handleError(`Fechas faltantes:\n${missingDates}`);
         }
@@ -86,7 +88,7 @@ const Individual = () => {
     const goToSearch = useCallback(
         () => {
             if (accountsSelected.length > 1) updateAccounts(accountsSelected.slice(0, 1));
-            router.push({ pathname: '/list-account', params: { type: 'Account' } })
+            router.push({ pathname: '/(menu)/(individual)/list-account', params: { type: 'Account' } })
         },
         [accountsSelected, router, updateAccounts],
     )
@@ -161,7 +163,7 @@ const Individual = () => {
 
     return (
         <>
-            <Drawer.Screen options={{ headerRight: () => (<IconButton icon={'help-circle'} onPress={() => setIsShow(true)} />) }} />
+            <Drawer.Screen options={{ headerLeft: () => (<IconButton icon={'menu'} onPress={() => navigation.dispatch(DrawerActions.openDrawer)} />), headerRight: () => (<IconButton icon={'help-circle'} onPress={() => setIsShow(true)} />) }} />
             <View style={[{ flex: 1, padding: 10, justifyContent: 'center', alignItems: 'center' }]}>
                 <View style={[
                     { width: '100%' },
@@ -209,4 +211,3 @@ const Individual = () => {
         </>
     )
 }
-export default Individual;

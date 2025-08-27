@@ -30,8 +30,8 @@ const Loading = ({ loading, refresh }: { loading?: boolean, refresh?: boolean })
     return (
         loading ?
             <Animated.View entering={FadeIn} exiting={FadeOut} collapsable style={[
-                { position: 'absolute', zIndex: 10, top: 0, justifyContent: 'center', alignItems: 'center' },
-                loading && { width: '100%', height: '100%' },
+                { position: 'absolute', zIndex: 10, top: 0, right: 0, left: 0, justifyContent: 'center', alignItems: 'center' },
+                { backgroundColor: '#00000050', top: 0, height: '100%' },
             ]}>
                 <Animated.View
                     style={[

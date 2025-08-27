@@ -13,7 +13,7 @@ export const Notification = () => {
     const closeNot = useNotificationStore(state => state.closeNot);
 
     useEffect(() => {
-        if (content && autoClose) {
+        if (show || (content && autoClose)) {
             const close = setTimeout(() => {
                 closeNot();
             }, timeOut);
@@ -21,7 +21,7 @@ export const Notification = () => {
                 clearTimeout(close);
             }
         }
-    }, [content, closeNot, autoClose, timeOut]);
+    }, [content, closeNot, autoClose, timeOut, show]);
 
     return (
         <Portal>

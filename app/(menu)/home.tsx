@@ -1,16 +1,15 @@
 import { SocialNetworks } from '@/components/SocialNetworks';
 import { Orientation } from '@/interface/app.store.interface';
-import { ThemeMode } from '@/interface/theme.store.interface';
 import useAppStore from '@/utils/app.store';
 import useThemeStore from '@/utils/theme.store';
 import React from 'react';
 import { Image, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
-const Index = () => {
+export default function Home() {
     const orientation = useAppStore(state => state.orientation);
-    const mode = useThemeStore(state => state.mode);
-    const theme = useThemeStore(state => state.theme);
+    const { theme } = useThemeStore();
+
     return (
         <View style={[
             { flex: 1, justifyContent: 'space-around' },
@@ -27,7 +26,7 @@ const Index = () => {
                 <Image
                     style={[
                         { resizeMode: 'contain', width: '70%', height: '20%', alignSelf: 'center' },
-                        mode === ThemeMode.dark ? { tintColor: theme.colors.onSurface } : { tintColor: theme.colors.primary }
+                        theme.dark ? { tintColor: theme.colors.onSurface } : { tintColor: theme.colors.primary }
                     ]}
                     source={require('../../assets/images/prelmo2.png')}
                 />
@@ -43,5 +42,3 @@ const Index = () => {
         </View>
     )
 }
-
-export default Index;

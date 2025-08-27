@@ -1,13 +1,16 @@
 import Loading from '@/components/Loading';
+import { TargetPercentaje } from '@/components/TargetPercentaje';
 import { useReport } from '@/hooks/useReports';
-import { Account, Alarm, AP, APCI, Bat, CI, Events, filterEvents, otros, Prue, TypeReport } from '@/interface/hooks.interface';
+import { Orientation } from '@/interface/app.store.interface';
+import { Account, Alarm, AP, APCI, Bat, CI, Events, filterEvents, otros, Percentajes, Prue, TypeReport } from '@/interface/hooks.interface';
+import useAppStore from '@/utils/app.store';
 import useThemeStore from '@/utils/theme.store';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import Color from 'color';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Platform, RefreshControl, View } from 'react-native';
-import { Surface, Text, ToggleButton } from 'react-native-paper';
+import { RefreshControl, ScrollView, View } from 'react-native';
+import { Appbar, Surface, Text, ToggleButton } from 'react-native-paper';
 
 
 const ResultAccount = () => {
@@ -19,6 +22,9 @@ const ResultAccount = () => {
   const parsedTypeAccount: number = +typeAccount;
   const [filter, setFilter] = useState<filterEvents>('ALL');
   const theme = useThemeStore(state => state.theme);
+  const orientation = useAppStore(state => state.orientation);
+  const router = useRouter();
+  const navigation = useNavigation();
 
   const { data, isLoading, isFetching, refetch } = useReport({
     accounts: [parseInt(parsedAccount.CodigoCte)],
@@ -29,12 +35,7 @@ const ResultAccount = () => {
     key: String(parsedAccount.CodigoCte),
   });
 
-  const pages: {
-    title: string;
-    key: filterEvents;
-    nameIcon: string;
-    color?: string;
-  }[] =
+  const pages: { title: string; key: filterEvents; nameIcon: string; color?: string; }[] =
     report === 'ap-ci'
       ? [
         { title: 'Todos', key: 'ALL', nameIcon: 'check-all', color: theme.colors.primary },
@@ -50,9 +51,79 @@ const ResultAccount = () => {
         { title: 'Otros', key: 'otros', nameIcon: 'help-circle', color: '#977220' },
       ];
 
+  const _renderPercentajes = useCallback(() => {
+    const Percentajes = (percentajes: Percentajes) => {
+      {
+        return Object.entries(percentajes).map((el, idx) => {
+          const { label, total, percentaje, text, events } = el[1];
+          const title: string = label ?? el[0];
+          return (
+            <TargetPercentaje
+              key={JSON.stringify(el)}
+              text={title}
+              amount={`${events}/${total}`}
+              percentage={percentaje}
+              textLarge={text}
+              icon={
+                el[0] === 'Aperturas'
+                  ? { name: 'lock-open', backgroundColor: '#3acf9e' }
+                  : el[0] === 'Cierres'
+                    ? { name: 'lock', backgroundColor: '#ff7782' }
+                    : el[0] === 'APCI'
+                      ? { name: 'shield', backgroundColor: '#3acf9e' }
+                      : el[0] === 'Alarma'
+                        ? { name: 'bell', backgroundColor: '#ff7782' }
+                        : el[0] === 'Pruebas'
+                          ? { name: 'cog', backgroundColor: '#2bcadf' }
+                          : el[0] === 'Battery'
+                            ? { name: 'battery', backgroundColor: '#dfd32b' }
+                            : { name: 'help-circle', backgroundColor: '#977220' }
+              }
+            />
+          );
+        });
+      }
+    };
+
+    if (data && data.cuentas) {
+      if (data.cuentas.length === 1) {
+        const { percentajes } = data;
+        if (percentajes)
+          return (
+            <View style={{ marginHorizontal: 10 }}>
+              {report === 'ap-ci' ? (
+                <View
+                  style={{
+                    flexDirection:
+                      orientation === Orientation.portrait ? 'row' : 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  {Percentajes(percentajes)}
+                </View>
+              ) : (
+                <ScrollView
+                  horizontal={orientation === Orientation.portrait}
+                  alwaysBounceHorizontal={orientation === Orientation.portrait}
+                  showsHorizontalScrollIndicator={false}>
+                  {Percentajes(percentajes)}
+                </ScrollView>
+              )}
+            </View>
+          );
+        else return undefined;
+      } else {
+        return undefined;
+      }
+    } else {
+      return undefined;
+    }
+  }, [data, orientation, report]);
+
+
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<Events>) => (
-      <Surface style={{ padding: 8, elevation: 5, borderRadius: 8, marginHorizontal: 10, marginVertical: 5 }}>
+      <Surface style={{ padding: 8, elevation: 1, borderRadius: 8, marginHorizontal: 10, marginVertical: 5 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View>
             <Text variant="labelLarge">{item.DescripcionEvent}</Text>
@@ -141,14 +212,7 @@ const ResultAccount = () => {
               renderItem={renderItem}
               keyExtractor={(_, idx) => `${idx}`}
               removeClippedSubviews={true}
-              estimatedItemSize={100}
-              onEndReachedThreshold={0.5}
-              onEndReached={() => {
-                if (isFetching) return;
-                refetch();
-              }}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
+              estimatedItemSize={Events.length ?? 0}
               refreshControl={
                 <RefreshControl
                   refreshing={false}
@@ -163,54 +227,54 @@ const ResultAccount = () => {
       }
       return undefined;
     },
-    [data, isFetching, refetch, renderItem],
+    [data, refetch, renderItem],
   );
 
+  const Header = useCallback(
+    () => (
+      <Appbar.Header mode='medium'>
+        <Appbar.BackAction onPress={router.back} />
+        <Appbar.Content title={
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 30 }}>
+            <View style={{ flex: 1 }}>
+              <Text variant="titleSmall" numberOfLines={1} style={{ fontWeight: 'bold' }}> {parsedAccount.Nombre} </Text>
+              <Text variant="labelSmall"> Entre las fechas:</Text>
+              <Text variant="labelSmall"> {start} a {end} </Text>
+            </View>
+          </View>
+        } />
+        <Appbar.Action icon="refresh" onPress={() => refetch()} />
+      </Appbar.Header>
+    ),
+    [end, parsedAccount.Nombre, refetch, router.back, start],
+  )
+
   useEffect(() => {
-    return () => {
-    }
-  }, [data,])
+    navigation.setOptions({
+      header: () => <Header />
+    });
+  }, [Header, navigation])
 
   return (
-    <>
-      <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
-        <Text variant="titleSmall">
-          <View
-            style={{
-              width: 3,
-              height: Platform.OS === 'ios' ? 13 : 11,
-              // backgroundColor: colors.primary,
-            }}
-          />{' '}
-          {parsedAccount.Nombre}
-        </Text>
-        <Text variant="labelSmall">
-          <View
-            style={{ width: 3, height: 10, /* backgroundColor: colors.primary */ }}
-          />{' '}
-          Entre las fechas {start} a {end}
-        </Text>
-      </View>
-      <View style={{ flex: 1 }}>
-        {_renderData(filter)}
-      </View>
-      <ToggleButton.Row onValueChange={() => { }} value={''} style={{ justifyContent: 'center', marginBottom: 15, marginTop: 10 }}>
+    <View style={{ flex: 1 }}>
+      {_renderPercentajes()}
+      {_renderData(filter)}
+      <ToggleButton.Row onValueChange={() => { }} value='' style={{ justifyContent: 'center', marginBottom: 20, marginTop: 10 }}>
         {
           pages.map((p) => (
             <ToggleButton
               key={p.key}
               value={p.key}
               icon={p.nameIcon}
-              iconColor={p.color ?? '#000'}
+              iconColor={theme.dark ? Color(p.color).lighten(.1).hex() : Color(p.color).darken(.4).hex() ?? '#000'}
               status={filter === 'ALL' ? 'checked' : filter === p.key ? 'checked' : 'unchecked'}
               onPress={() => setFilter(p.key)}
-              rippleColor={Color(p.color).lighten(.5).hex()}
             />
           ))
         }
       </ToggleButton.Row>
       <Loading loading={isLoading} refresh={isFetching} />
-    </>
+    </View>
   );
 }
 

@@ -9,7 +9,6 @@ export default function TCAP() {
     const accept: boolean = false;
     const router = useRouter();
 
-
     return (
         <Animated.View entering={FadeInDown} exiting={FadeOutDown} style={{ flex: 1 }}>
             <SafeAreaView style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
