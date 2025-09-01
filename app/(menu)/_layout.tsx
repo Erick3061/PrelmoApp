@@ -14,6 +14,7 @@ export default function _layout() {
             <Drawer drawerContent={props => <MenuContent {...props} />}>
                 <Drawer.Screen name='home' options={{ title: 'Inicio' }} />
                 <Drawer.Screen name='(individual)' options={{ headerShown: false, title: 'Individual' }} />
+                <Drawer.Screen name='(group)' options={{ headerShown: false, title: 'Grupal' }} />
             </Drawer>
         </GestureHandlerRootView>
     )
@@ -24,7 +25,11 @@ const MenuContent = ({ state, navigation }: DrawerContentComponentProps) => {
     const { theme, updateMode } = useThemeStore();
     const queryClient = new QueryClient();
     const changeTheme = () => theme.dark ? updateMode(ThemeMode.light) : updateMode(ThemeMode.dark);
-    const request: { page: string, icon: string }[] = [{ page: '(individual)', icon: 'file-outline' }];
+    const request: { page: string, icon: string, name?: string }[] = [
+        { page: '(individual)', icon: 'file-outline', name: 'Individual' },
+        { page: '(group)', icon: 'file-multiple-outline', name: 'Grupo' },
+        { page: '(avanzado)', icon: 'file-cog-outline', name: 'Avanzado' }
+    ];
     const others: { page: string, icon: string }[] = [{ page: 'downloads', icon: 'file-download-outline' }, { page: 'profile', icon: 'account-circle-outline' }, { page: 'about', icon: 'help' }];
 
     return (
@@ -52,7 +57,7 @@ const MenuContent = ({ state, navigation }: DrawerContentComponentProps) => {
                         return (
                             find && <DrawerPaper.Item
                                 active={index === state.index}
-                                label={item}
+                                label={find.name ?? item}
                                 key={item}
                                 onPress={() => navigation.jumpTo(item)}
                                 icon={find.icon}
