@@ -18,6 +18,7 @@ export const useSetConfig = () => {
     const setScreen = useAppStore(store => store.setScreen);
     const domain = useAppStore(store => store.domain);
     const logIn = useAuthStore(store => store.logIn);
+    const logOut = useAuthStore(store => store.logOut);
     const User = useAuthStore(store => store.User);
     const refreshToken = useAuthStore(store => store.refreshToken);
 
@@ -50,14 +51,16 @@ export const useSetConfig = () => {
                         const user = await AuthService.CheckAuth(refreshToken ?? 'without token');
                         logIn(user);
                     } catch (error) {
+                        logOut();
                         return Promise.reject(error);
                     }
                 }
                 if (error.response && error.response.data) return Promise.reject(error.response.data);
+                logOut();
                 return Promise.reject(error);
             });
         },
-        [User?.token, domain, instance.defaults, instance.interceptors.request, instance.interceptors.response, logIn, refreshToken],
+        [User?.token, domain, instance.defaults, instance.interceptors.request, instance.interceptors.response, logIn, logOut, refreshToken],
     )
 
 
