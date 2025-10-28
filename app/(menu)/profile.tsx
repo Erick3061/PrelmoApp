@@ -34,7 +34,7 @@ const Profile = () => {
                             <Button
                                 style={{ marginVertical: 10 }}
                                 mode='contained'
-                                onPress={() => router.navigate('/changePassword')}
+                                onPress={() => { }}
                             >Cambiar contraseña</Button>
                         </Card.Content>
                     </Card>

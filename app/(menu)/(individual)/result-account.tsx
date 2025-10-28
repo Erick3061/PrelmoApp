@@ -212,7 +212,6 @@ const ResultAccount = () => {
               renderItem={renderItem}
               keyExtractor={(_, idx) => `${idx}`}
               removeClippedSubviews={true}
-              estimatedItemSize={Events.length ?? 0}
               refreshControl={
                 <RefreshControl
                   refreshing={false}

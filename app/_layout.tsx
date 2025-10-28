@@ -7,13 +7,13 @@ import useAuthStore from '@/utils/auth.store';
 import useThemeStore from '@/utils/theme.store';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
-import * as Clipboard from "expo-clipboard";
+import * as Clipboard from 'expo-clipboard';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { Appbar, PaperProvider } from 'react-native-paper';
-import { DevToolsBubble } from "react-native-react-query-devtools";
+import { DevToolsBubble } from 'react-native-react-query-devtools';
 import 'react-native-reanimated';
 
 const style = StyleSheet.create({
@@ -35,9 +35,7 @@ export default function Root() {
   const queryClient = new QueryClient();
   const theme = useThemeStore(state => state.theme);
   const [loaded] = useFonts({ SpaceMono: require('../assets/fonts/poppins.regular.ttf') });
-
   if (!loaded) return null;
-
   const onCopy = async (text: string) => {
     try {
       await Clipboard.setStringAsync(text);
@@ -53,9 +51,9 @@ export default function Root() {
         <ThemeProvider value={theme}>
           <RootNavigator />
           <Notification />
+          <DevToolsBubble onCopy={onCopy} queryClient={queryClient} />
         </ThemeProvider>
       </PaperProvider>
-      <DevToolsBubble onCopy={onCopy} queryClient={queryClient} />
     </QueryClientProvider >
   );
 }
@@ -63,7 +61,8 @@ export default function Root() {
 
 function RootNavigator() {
   const { status, logIn, logOut } = useAuthStore();
-  const { isLoading, data, isSuccess, isError } = useQuery({ queryKey: ['CheckAuth'], queryFn: () => AuthService.CheckAuth(), retry: 0 });
+  const User = useAuthStore(store => store.User);
+  const { isLoading, data, isSuccess, isError } = useQuery({ queryKey: ['CheckAuth'], queryFn: () => AuthService.CheckAuth(), retry: 0, enabled: User ? true : false });
 
   useEffect(() => {
     if (isError) logOut();

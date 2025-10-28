@@ -43,8 +43,6 @@ export interface AuthActions {
 export interface AuthState extends AuthActions {
     status: AuthStatus;
     User?: User;
-    token?: string;
-    refreshToken?: string;
     authData?: {
         email: string;
         password: string;

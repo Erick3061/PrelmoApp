@@ -56,7 +56,6 @@ export const ReciclerData = <T extends object>(props: Props<T>) => {
             <FlashList
                 data={data}
                 renderItem={_renderRow}
-                estimatedItemSize={data.length}
                 refreshControl={
                     <RefreshControl
                         refreshing={loading}
