@@ -4,6 +4,7 @@ import { useSetConfig } from '@/hooks/useSetConfig';
 import { AuthStatus } from '@/interface/auth.store.interface';
 import AuthService from '@/services/auth.service';
 import useAuthStore from '@/utils/auth.store';
+import useNotificationStore from '@/utils/notification.store';
 import useThemeStore from '@/utils/theme.store';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
@@ -60,13 +61,13 @@ export default function Root() {
 
 
 function RootNavigator() {
-  const { status, logIn, logOut } = useAuthStore();
-  const User = useAuthStore(store => store.User);
-  const { isLoading, data, isSuccess, isError } = useQuery({ queryKey: ['CheckAuth'], queryFn: () => AuthService.CheckAuth(), retry: 0, enabled: User ? true : false });
+  const handleError = useNotificationStore(state => state.handleError);
+  const { status, logIn } = useAuthStore();
+  const { isLoading, data, isSuccess, isError, error } = useQuery({ queryKey: ['CheckAuth'], queryFn: () => AuthService.CheckAuth(), retry: 0 });
 
   useEffect(() => {
-    if (isError) logOut();
-  }, [isError, logOut]);
+    if (isError) { handleError(error.message) }
+  }, [error, handleError, isError]);
 
   useEffect(() => {
     if (isSuccess && data) {

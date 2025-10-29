@@ -34,7 +34,7 @@ export interface User {
 
 export interface AuthActions {
     checkAuth: () => void;
-    logIn: (user: User) => void;
+    logIn: (user?: User) => void;
     logOut: () => void;
     setData: ({ email, password }: { email: string; password: string; }) => void;
     removeData: () => void;
