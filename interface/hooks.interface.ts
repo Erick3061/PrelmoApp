@@ -78,6 +78,12 @@ export interface Account {
     evento?: Events;
 }
 
+export interface Group {
+    Codigo: number;
+    Nombre: string;
+    Tipo: number;
+}
+
 export interface useReportProps {
     type: TypeReport,
     accounts: number[],

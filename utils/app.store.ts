@@ -15,13 +15,15 @@ const appStore: StateCreator<AppStore> = (set, get) => ({
     firstEntry: true,
     isCompatible: false,
     accountsSelected: [],
+    groupsSelected: [],
     setInstance: (instance: AxiosInstance) => { set({ instance }) },
     setOrientation: (orientation: Orientation) => { set({ orientation }) },
     setScreen: ({ height, width }: { height: number, width: number }) => { set({ screenHeight: height, screenWidth: width }) },
     updateIsCompatible: (isCompatible: boolean) => { set({ isCompatible }) },
     setSaved: (saved: Saved | null) => { set({ saved }) },
     updateFE: (firstEntry: boolean) => { set({ firstEntry }) },
-    updateAccounts: (accounts) => set(state => ({ ...state, accountsSelected: accounts }))
+    updateAccounts: (accounts) => set(state => ({ ...state, accountsSelected: accounts })),
+    updateGroups: (groups) => set(state => ({ ...state, groupsSelected: groups })),
 });
 
 const useAppStore = create<AppStore>()(

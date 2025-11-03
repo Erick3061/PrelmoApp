@@ -19,16 +19,16 @@ const reports: { name: string, value: Exclude<TypeReport, "ap-ci" | "event-alarm
     { name: 'HORARIO DE APERTURAS Y CIERRES', value: 'apci-week' },
 ];
 
-interface Account {
+interface Group {
     name: string;
     report: string;
 }
 
 export default function GrupalIndex() {
-    const { control, handleSubmit, reset, setValue: setValueForm, formState } = useForm<Account>({ defaultValues: { name: '', report: '' } });
+    const { control, handleSubmit, reset, setValue: setValueForm, formState } = useForm<Group>({ defaultValues: { name: '', report: '' } });
     const orientation = useAppStore(store => store.orientation);
-    const accountsSelected = useAppStore(store => store.accountsSelected);
-    const updateAccounts = useAppStore(store => store.updateAccounts);
+    const updateGroup = useAppStore(store => store.updateGroups);
+    const groupsSelected = useAppStore(store => store.groupsSelected);
     const handleError = useNotificationStore(state => state.handleError);
     const [isShow, setIsShow] = useState<boolean>(false);
     const [report, setReport] = useState<typeof reports>();
@@ -38,7 +38,7 @@ export default function GrupalIndex() {
     const router = useRouter();
     const navigation = useNavigation();
 
-    const onSubmit: SubmitHandler<Account> = async (props) => {
+    const onSubmit: SubmitHandler<Group> = async (props) => {
         // if (dates && accountsSelected.length > 0 && report) {
         //     const missingDates = dates.filter(s => s.date === undefined).map(name => name.name);
         //     if (missingDates?.length === 0 && report.length > 0 && accountsSelected.length > 0) {
@@ -51,39 +51,32 @@ export default function GrupalIndex() {
     };
 
     useEffect(() => {
-        if (accountsSelected.length > 0) {
-            setValueForm('name', accountsSelected[0].Nombre);
+        if (groupsSelected) {
+            setValueForm('name', groupsSelected[0].Nombre);
         } else {
             setValueForm('name', '');
         }
-    }, [accountsSelected, setValueForm]);
+    }, [groupsSelected, setValueForm]);
 
     const DialogRender = (
         <Portal>
             <Dialog visible={isShow} onDismiss={() => setIsShow(false)}>
-                <Dialog.Title>Consulta individual</Dialog.Title>
-                <Dialog.Content style={[orientation === Orientation.landscape && { maxHeight: 150 }]}>
+                <Dialog.Title>Consulta por grupo</Dialog.Title>
+                <Dialog.Content style={[
+                    orientation === Orientation.landscape && {
+                        maxHeight: 150
+                    }
+                ]}>
                     <ScrollView>
-                        <Text variant="titleSmall">PROBLEMAS DE BATERIA</Text>
-                        <Text variant="labelMedium">
-                            Rastrea los sistemas con fallos de batería.{'\n'}Este reporte
-                            consulta 30 días naturales.{'\n'}
-                        </Text>
-                        <Text variant="titleSmall">ESTADO DE SUCURSALES</Text>
-                        <Text variant="labelMedium">
-                            Permite consultar el estado de las sucursales al momento de
-                            realizar la petición.{'\n'}Los estados posibles son:{'\n'}
-                            {'\n'}
+                        <Text variant='titleSmall'>PROBLEMAS DE BATERIA</Text>
+                        <Text variant='labelMedium'>Rastrea los sistemas con fallos de batería.{'\n'}Este reporte consulta 30 días naturales.{'\n'}</Text>
+                        <Text variant='titleSmall'>ESTADO DE SUCURSALES</Text>
+                        <Text variant='labelMedium'>Permite consultar el estado de las sucursales al momento de realizar la petición.{'\n'}Los estados posibles son:{'\n'}{'\n'}
                             Abierto{'\n'}
                             Cerrado{'\n'}
-                            Sin actividad{'\n'}
-                        </Text>
-                        <Text variant="titleSmall">HORARIO DE APERTURAS Y CIERRES</Text>
-                        <Text variant="labelMedium">
-                            Consulta primer apertura y ultimo cierre de cada día de todas
-                            las sucursales, este reporte consulta 7 días antes de la fecha
-                            de consulta.
-                        </Text>
+                            Sin actividad{'\n'}</Text>
+                        <Text variant='titleSmall'>HORARIO DE APERTURAS Y CIERRES</Text>
+                        <Text variant='labelMedium'>Consulta primer apertura y ultimo cierre de cada día de todas las sucursales, este reporte consulta 7 días antes de la fecha de consulta.</Text>
                     </ScrollView>
                 </Dialog.Content>
                 <Dialog.Actions>
@@ -95,10 +88,9 @@ export default function GrupalIndex() {
 
     const goToSearch = useCallback(
         () => {
-            if (accountsSelected.length > 1) updateAccounts(accountsSelected.slice(0, 1));
-            router.push({ pathname: '/(menu)/(individual)/list-account', params: { type: 'Account' } })
+            router.push({ pathname: '/(menu)/(group)/list-group' })
         },
-        [accountsSelected, router, updateAccounts],
+        [router],
     )
 
 
@@ -107,22 +99,22 @@ export default function GrupalIndex() {
         return (
             <Controller
                 control={control}
-                rules={{ required: { message: 'Debe seleccionar una cuenta', value: true } }}
+                rules={{ required: { message: 'Debe seleccionar un grupo', value: true } }}
                 name='name'
                 render={({ field: { value, onChange }, fieldState: { error } }) =>
                     <>
                         <TextInput
                             mode='outlined'
                             value={value}
-                            label={'Seleccione una cuenta'}
-                            placeholder={'Seleccione una cuenta'}
+                            label={'Seleccione un grupo'}
+                            placeholder={'Seleccione un grupo'}
                             showSoftInputOnFocus={false}
                             caretHidden
                             right={
                                 <TextInput.Icon
                                     icon={value !== '' ? 'close' : 'menu-down'}
                                     forceTextInputFocus={false}
-                                    onPress={(value !== '') ? () => updateAccounts([]) : goToSearch}
+                                // onPress={(value !== '') ? () => updateGroup() : goToSearch}
                                 />
                             }
                             onPressIn={goToSearch}
@@ -132,7 +124,7 @@ export default function GrupalIndex() {
                 }
             />
         )
-    }, [control, goToSearch, mode, updateAccounts]);
+    }, [control, goToSearch, mode]);
 
     const _renderSelectReport = useCallback(() => {
         if (reports) {

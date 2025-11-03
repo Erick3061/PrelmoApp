@@ -1,7 +1,7 @@
 import Loading from '@/components/Loading';
 import { ReciclerData } from '@/components/ReciclerData';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
-import { Account } from '@/interface/hooks.interface';
+import { Group } from '@/interface/hooks.interface';
 import UserService from '@/services/user.service';
 import useAppStore from '@/utils/app.store';
 import useNotificationStore from '@/utils/notification.store';
@@ -10,14 +10,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useGlobalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { IconButton, Searchbar } from 'react-native-paper';
+import { Searchbar } from 'react-native-paper';
 
 export default function ListGroup() {
-    const [filter, setFilter] = useState<Account[]>([]);
+    const [filter, setFilter] = useState<Group[]>([]);
     const [textQueryValue, setTextQueryValue] = useState<string>('');
-
-    const accountsSelected = useAppStore(state => state.accountsSelected);
-    const updateAccounts = useAppStore(state => state.updateAccounts);
+    const groupSelected = useAppStore(state => state.groupsSelected);
+    const updateGroup = useAppStore(state => state.updateGroups);
     const handleError = useNotificationStore(state => state.handleError);
     const theme = useThemeStore(state => state.theme);
 
@@ -29,8 +28,8 @@ export default function ListGroup() {
 
 
     const { isFetching, isLoading, refetch, isError, error, data } = useQuery({
-        queryKey: ['MyAccounts'],
-        queryFn: UserService.GetMyAccount
+        queryKey: ['MyGroups'],
+        queryFn: UserService.GetMyGroups
     });
 
 
@@ -38,30 +37,16 @@ export default function ListGroup() {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Searchbar
                 style={{ marginVertical: 10, marginHorizontal: 10, flex: 1 }}
-                placeholder="Buscar cuenta"
+                placeholder="Buscar grupo"
                 onChangeText={setTextQueryValue}
                 value={textQueryValue}
             />
-            {
-                type === 'Accounts' &&
-                <IconButton
-                    style={{ marginRight: 10 }}
-                    icon={'check-circle'}
-                    onPress={() => router.back()}
-                />
-            }
         </View>
     )
 
-    const update = (item: Account) => {
-        if (type === 'Account') {
-            updateAccounts([item]);
-            router.back();
-        } else {
-            const exist = accountsSelected.find(f => f.CodigoCte === item.CodigoCte);
-            if (exist) updateAccounts(accountsSelected.filter(f => f.CodigoCte !== item.CodigoCte));
-            else updateAccounts([...accountsSelected, item]);
-        }
+    const update = (item: Group) => {
+        updateGroup([item]);
+        router.back();
     }
 
     useEffect(() => {
@@ -69,15 +54,15 @@ export default function ListGroup() {
     }, [error, handleError, isError]);
 
     useEffect(() => {
-        if (data) setFilter(data.accounts);
+        if (data) setFilter(data.groups);
     }, [data])
 
     useEffect(() => {
-        if (data) setFilter(() => data.accounts.filter(f => String(f['Nombre']).toLowerCase().includes(debaucedValue.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))));
+        if (data) setFilter(() => data.groups.filter(f => String(f['Nombre']).toLowerCase().includes(debaucedValue.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))));
     }, [data, debaucedValue]);
 
     useEffect(() => {
-        if (textQueryValue.length === 0 && data) setFilter(data.accounts);
+        if (textQueryValue.length === 0 && data) setFilter(data.groups);
     }, [data, textQueryValue]);
 
     return (
@@ -85,12 +70,12 @@ export default function ListGroup() {
             <Loading loading={isLoading} />
             {Search()}
             <ReciclerData
-                data={type === 'Accounts' ? filter.filter(f => (accountsSelected.find(b => b.CodigoCte === f.CodigoCte)) === undefined) : filter}
+                data={filter}
                 labelField='Nombre'
-                valueField='CodigoCte'
+                valueField='Codigo'
                 loading={isFetching}
                 onChange={update}
-                selected={accountsSelected}
+                selected={groupSelected}
                 onRefresh={refetch}
             />
         </View>
